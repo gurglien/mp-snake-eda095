@@ -16,7 +16,11 @@ public class GUIController {
 		this.gui.setRefreshListener(new RefreshListener());
 		this.gui.setNewGameListener(new NewGameListener());
 	}
-	
+	/**
+	 * An ActionListerner Class that handles the actions of the connect button.
+	 * @author marcus
+	 *
+	 */
 	private class ConnectListener implements ActionListener{
 
 		@Override
@@ -26,6 +30,11 @@ public class GUIController {
 		
 	}
 	
+	/**
+	 * An ActionListerner Class that handles the actions of the new game button.
+	 * @author marcus
+	 *
+	 */
 	private class NewGameListener implements ActionListener{
 
 		@Override
@@ -35,6 +44,11 @@ public class GUIController {
 		
 	}
 	
+	/**
+	 * An ActionListerner Class that handles the actions of the refresh button.
+	 * @author marcus
+	 *
+	 */
 	private class RefreshListener implements ActionListener{
 
 		@Override
