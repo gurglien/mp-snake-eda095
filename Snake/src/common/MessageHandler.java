@@ -3,6 +3,7 @@ package common;
 /**
  * Message handler is the low-level message handler for messages to/from the
  * server. It handles transmission/reception of low-level message units.
+ * From login.student.lth.se: /usr/local/cs/cpp/serverTests/src/common
  */
 
 public class MessageHandler {
