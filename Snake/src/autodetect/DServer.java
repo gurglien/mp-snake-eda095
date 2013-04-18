@@ -8,7 +8,7 @@ public class DServer {
 	public static final int DSERVER_PORT = 4567;
 
     public static void main(String args[]) {
-    	int gameServerPort = 1234;
+    	int gameServerPort = 1234; //TODO ska vara samma som spelets...
 
 	   	try {
 		    MulticastSocket ms = new MulticastSocket(DSERVER_PORT);
@@ -24,7 +24,7 @@ public class DServer {
 				System.out.println("Received: " + s + " from " + cAddr.toString() + ":" + cPort);
 				DatagramSocket socket = new DatagramSocket();
 				buf = (MESSAGE + gameServerPort).getBytes();
-				dp = new DatagramPacket(buf, buf.length, cAddr, cPort); //cPort?
+				dp = new DatagramPacket(buf, buf.length, cAddr, cPort);
 				socket.send(dp);
 		    }
 		} catch(IOException e) {
