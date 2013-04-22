@@ -8,6 +8,7 @@ public class Protocol {
 	COM_SEND_STATE 	= 3,
 	COM_SEND_POSITION = 4,
 	COM_END 		= 5,
+	COM_PLAYER_READY = 6,
 
 	ANS_TURN_LEFT 	= 21,
 	ANS_TURN_RIGHT 	= 22,
@@ -29,6 +30,7 @@ public class Protocol {
 			case ANS_ACK:			return "ANS_ACK";
 			case ANS_NACK:			return "ANS_NACK";
 			case ANS_END:			return "ANS_END";
+			case COM_PLAYER_READY: 	return "COM_PLAYER_READY";
 			default: return "";
 		}
 	}
