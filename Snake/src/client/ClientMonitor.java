@@ -1,23 +1,22 @@
 package client;
-import java.util.ArrayDeque;
+import java.awt.event.KeyEvent;
 
 
 public class ClientMonitor {
-	private Player[] players = new Player[2];
+	private int[] moves = new int[2];
 	
 	public ClientMonitor(){
-		players[0] = new Player(1);
-		players[1] = new Player(2);
+		moves[0] = KeyEvent.VK_RIGHT;
+		moves[1] = KeyEvent.VK_RIGHT;
 	}
 	
-	public synchronized void putNewMove(int move){
-		players[0].move(move);
-//		players[1].move(move);
+	public synchronized void putNewMove(int player, int move){
+		// player==1 is the local player
+		moves[player - 1] = move;
 	}
 	
-	public synchronized ArrayDeque<Position> getSnake(int player){
-		return players[player - 1].getSnake();
+	public synchronized int getMove(int player){
+		return moves[player - 1];
 	}
-	
 
 }

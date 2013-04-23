@@ -1,6 +1,5 @@
 package client;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 public class ClientGameLoop extends Thread{
 	private ClientMonitor monitor;
@@ -20,17 +19,16 @@ public class ClientGameLoop extends Thread{
 		frame.setVisible(true);
 	}
 
-	@Override
 	public void run() {
+		Player p1 = new Player(1);
+		Player p2 = new Player(2);
 		long loopStart = System.currentTimeMillis();
 		while(true){
-			// Limit to 30 fps
-			if(System.currentTimeMillis() - loopStart > 1000*1/30){
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						panel.updateSnake(monitor.getSnake(1), monitor.getSnake(2));
-					}
-				});
+			// Limit update speed (fixa ngn sleep-anordning senare)
+			if(System.currentTimeMillis() - loopStart > 300){
+				p1.move(monitor.getMove(1));
+				p2.move(monitor.getMove(2));
+				panel.updateSnake(p1.getSnake(), p2.getSnake());
 				loopStart = System.currentTimeMillis();
 			}
 		}

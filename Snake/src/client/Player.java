@@ -27,7 +27,6 @@ public class Player {
 	}
 	
 	public void move(int direction) throws IllegalArgumentException{
-		System.out.println("MOVE");
 		Position oldHead = snake.getFirst();
 		Position newHead;
 		
