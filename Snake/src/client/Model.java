@@ -1,5 +1,10 @@
 package client;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
+
+import autodetect.ServerFinder;
+
 public class Model {
 
 	/**
@@ -7,8 +12,16 @@ public class Model {
 	 * @return 
 	 */
 	public Object[][] getServers() {
-		// TODO Auto-generated method stub
-		return null;
+		ServerFinder sf = new ServerFinder();
+		sf.findServers(2000);
+		ArrayList<InetAddress> addr = sf.getServerAddresses();
+		ArrayList<Integer> ports = sf.getServerPorts();
+		Object[][] servers = new Object[addr.size()][2]; //2 = number of columns in gui server table
+		for (int i = 0; i < addr.size(); i++) {
+			servers[i][0] = addr.get(i);
+			servers[i][1] = ports.get(i);
+		}
+		return servers;
 	}
 	
 	/**
@@ -18,7 +31,7 @@ public class Model {
 	 * @param password
 	 */
 	public void startNewGame(String serverName, String serverPort,String password) {
-		// TODO Password kan ignoreras sŒ lŠnge dŒ det inte Šr nšdvŠndigt, dock lŠttare att lŠgga till senare om vi vill.
+		// TODO Password kan ignoreras sï¿½ lï¿½nge dï¿½ det inte ï¿½r nï¿½dvï¿½ndigt, dock lï¿½ttare att lï¿½gga till senare om vi vill.
 		
 	}
 	/**

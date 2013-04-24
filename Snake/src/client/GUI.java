@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  * Menu GUI
@@ -39,20 +41,35 @@ public class GUI extends JFrame{
 	private JButton btnNewGame;
 	private JButton btnRefresh;
 	
-	 //TODO This data is temporary for display purposes, will be changed later.
-	private Object[][] serverData = {
-		    {"Kathy", "Smith",
-		     30000, new Integer(5), new Boolean(false)},
-		    {"John", "Doe",
-		     10, new Integer(3), new Boolean(true)},
-		    {"Sue", "Black",
-		     2000, new Integer(2), new Boolean(false)},
-		    {"Jane", "White",
-		     4311, new Integer(20), new Boolean(true)},
-		    {"Joe", "Brown",
-		     13431, new Integer(10), new Boolean(false)}
-		};
+//Panels
+	private JPanel serverPanel;
 	
+	 //TODO This data is temporary for display purposes, will be changed later.
+//	private Object[][] serverData = {
+//		    {"Kathy", "Smith",
+//		     30000, new Integer(5), new Boolean(false)},
+//		    {"John", "Doe",
+//		     10, new Integer(3), new Boolean(true)},
+//		    {"Sue", "Black",
+//		     2000, new Integer(2), new Boolean(false)},
+//		    {"Jane", "White",
+//		     4311, new Integer(20), new Boolean(true)},
+//		    {"Joe", "Brown",
+//		     13431, new Integer(10), new Boolean(false)}
+//		};
+
+//		String[] columnNames = {"Server Name",
+//                "Server IP",
+//                "Server Port",
+//                "# of Players",
+//                "Private"};
+
+	private Object[][] serverData = {
+			{"1.2.3.4", 5678},
+			{"111.222.33.44", 5555}
+	};
+	
+	private String[] columnNames = {"Server IP", "Server port"};
 	
 	public GUI() {
 		setTitle("MPSnake Pro");
@@ -105,7 +122,7 @@ public class GUI extends JFrame{
 		settingsPanel.add(serverPortField);
 		serverPortField.setColumns(10);
 		
-		JPanel serverPanel = new JPanel();
+		serverPanel = new JPanel();
 		tabbedPane.addTab("Servers", null, serverPanel, null);
 		serverPanel.setLayout(null);
 		
@@ -139,12 +156,6 @@ public class GUI extends JFrame{
 		lblName.setBounds(436, 319, 61, 16);
 		serverPanel.add(lblName);
 		
-		String[] columnNames = {"Server Name",
-                "Server IP",
-                "Server Port",
-                "# of Players",
-                "Private"};
-		
 		
 
 		
@@ -155,7 +166,6 @@ public class GUI extends JFrame{
 		table.setFillsViewportHeight(true);
 		serverPanel.add(scrollPane);
 	}
-	//CS was here
 	
 	// Methods that the controller uses to add actionlisteners to the GUI.
 	public void setConnectListener(ActionListener list){
@@ -202,6 +212,16 @@ public class GUI extends JFrame{
 	
 	public void setServerTable(Object[][] serverData){
 		this.serverData = serverData;
+		
+		//TODO find better way of updating the table, maybe something like:
+//		DefaultTableModel tModel = (DefaultTableModel) table.getModel();
+//		tModel.setDataVector(serverData, columnNames);
+		table = new JTable(serverData, columnNames);
+		table.setBounds(22, 41, 375, 444);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(22, 41, 402, 444);
+		table.setFillsViewportHeight(true);
+		serverPanel.add(scrollPane); //remove the current scrollPane first?
 	}
 	
 	public Object[] getServer(){
