@@ -14,7 +14,7 @@ public class ServerFinder {
 		ports = new ArrayList<Integer>();
 	}
 	
-	public void findServers() {
+	public void findServers(int waitmillis) {
 		try {
 		    MulticastSocket ms = new MulticastSocket();
 		    ms.setTimeToLive(1);
@@ -25,8 +25,10 @@ public class ServerFinder {
 			ms.send(dp);
 		   
 			// wait for answer(s)
-			int waittime = 2000; // 2 seconds
-			ms.setSoTimeout(waittime);
+			if (waitmillis <= 0) {
+				waitmillis = 2000;
+			}
+			ms.setSoTimeout(waitmillis);
 			while(true) {	
 				buf = new byte[65507];
 				dp = new DatagramPacket(buf, buf.length);
@@ -63,7 +65,7 @@ public class ServerFinder {
     public static void main(String args[]) {
     	System.out.println("Looking for servers...");
     	ServerFinder sf = new ServerFinder();
-    	sf.findServers();
+    	sf.findServers(2000);
     	ArrayList<InetAddress> addr = sf.getServerAddresses();
     	ArrayList<Integer> ports = sf.getServerPorts();
 		

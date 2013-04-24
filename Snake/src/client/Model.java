@@ -8,7 +8,11 @@ public class Model {
 	 */
 	public Object[][] getServers() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Object[][] {
+//					{"1.0.0.4", 5678},
+//					{"111.1.3.4", 5555},
+					{"99.88.77.66", 5678}
+				};
 	}
 	
 	/**
@@ -18,7 +22,7 @@ public class Model {
 	 * @param password
 	 */
 	public void startNewGame(String serverName, String serverPort,String password) {
-		// TODO Password kan ignoreras sŒ lŠnge dŒ det inte Šr nšdvŠndigt, dock lŠttare att lŠgga till senare om vi vill.
+		// TODO Password kan ignoreras sï¿½ lï¿½nge dï¿½ det inte ï¿½r nï¿½dvï¿½ndigt, dock lï¿½ttare att lï¿½gga till senare om vi vill.
 		
 	}
 	/**
