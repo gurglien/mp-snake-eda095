@@ -1,6 +1,8 @@
 package client;
 import javax.swing.JFrame;
 
+import client.ClientMonitor.GameState;
+
 public class ClientGameLoop extends Thread{
 	private ClientMonitor monitor;
 	private GamePanel panel;
@@ -23,14 +25,27 @@ public class ClientGameLoop extends Thread{
 		Player p1 = new Player(1);
 		Player p2 = new Player(2);
 		long loopStart = System.currentTimeMillis();
-		while(true){
+		while(monitor.getState() == GameState.PLAY){
 			// Limit update speed (fixa ngn sleep-anordning senare)
 			if(System.currentTimeMillis() - loopStart > 300){
-				p1.move(monitor.getMove(1));
-				p2.move(monitor.getMove(2));
-				panel.updateSnake(p1.getSnake(), p2.getSnake());
+				try {
+					p1.move(monitor.getCurrentMove(1));
+					p2.move(monitor.getCurrentMove(2));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				
+				if(monitor.getShouldGrow(1)) p1.grow();
+				if(monitor.getShouldGrow(2)) p2.grow();
+				
+				panel.updatePositions(p1.getSnake(), p2.getSnake(), monitor.getFood());
 				loopStart = System.currentTimeMillis();
 			}
 		}
+		System.out.println(monitor.getState());
 	}
+	
+	// Will be moved to server side later
+//	public 
 }
