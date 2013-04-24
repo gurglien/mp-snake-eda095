@@ -1,5 +1,10 @@
 package client;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
+
+import autodetect.ServerFinder;
+
 public class Model {
 
 	/**
@@ -7,12 +12,16 @@ public class Model {
 	 * @return 
 	 */
 	public Object[][] getServers() {
-		// TODO Auto-generated method stub
-		return new Object[][] {
-//					{"1.0.0.4", 5678},
-//					{"111.1.3.4", 5555},
-					{"99.88.77.66", 5678}
-				};
+		ServerFinder sf = new ServerFinder();
+		sf.findServers(2000);
+		ArrayList<InetAddress> addr = sf.getServerAddresses();
+		ArrayList<Integer> ports = sf.getServerPorts();
+		Object[][] servers = new Object[addr.size()][2]; //2 = number of columns in gui server table
+		for (int i = 0; i < addr.size(); i++) {
+			servers[i][0] = addr.get(i);
+			servers[i][1] = ports.get(i);
+		}
+		return servers;
 	}
 	
 	/**
