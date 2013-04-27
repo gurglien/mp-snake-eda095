@@ -27,7 +27,6 @@ public class ServerExample {
 			MessageHandlerExample mh = new MessageHandlerExample(clientSocket);
 			
 			code = mh.recieveCode();
-			System.out.println(code);
 			switch (code) {
 			case Protocol.COM_SEND_POSITION: 
 				message = mh.recievePosition();
