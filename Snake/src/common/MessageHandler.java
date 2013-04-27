@@ -6,8 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.logging.Logger;
+
+import client.Position;
 
 /**
  * Än så länge bara ett exempel på hur det här ska fungera. Bör väl se till att exceptions kastas ordentligt osv
@@ -69,8 +72,8 @@ public class MessageHandler {
 		 * Sends a String containing position information
 		 * Using a string for position is only for example.
 		 */
-		public void sendPosition(String position){
-			out.println(position);
+		public void sendPosition(Position pos){
+			out.println(pos.toString());
 		}
 		
 		/**
@@ -79,15 +82,16 @@ public class MessageHandler {
 		 * 
 		 * FÖr tillfället får det vara så. ersätter kanske senare med att läsa bytevektor direkt från inputstreamen
 		 */
-		public String recievePosition(){
-			String pos = null;
+		public Position recievePosition() throws ConnectException{
+			Position pos;
 			try {
-				pos = reader.readLine();
+				pos = new Position(reader.readLine());
+				return pos;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new ConnectException("Could not create position");
 			}
-			return pos;
+			
 		}
 	
 	
