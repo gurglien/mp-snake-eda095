@@ -68,12 +68,12 @@ public class MessageHandler {
 			
 		}
 		
-		/*
-		 * Sends a String containing position information
-		 * Using a string for position is only for example.
+		/**
+		 * 
+		 * Sends Position pos as a string
 		 */
 		public void sendPosition(Position pos){
-			out.println(pos.toString());
+			out.println(pos);
 		}
 		
 		/**
