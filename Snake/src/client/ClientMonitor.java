@@ -12,26 +12,28 @@ public class ClientMonitor {
 	private boolean[] shouldGrow = new boolean[2];
 	private GameState gameState = GameState.PLAY;
 	private boolean moveChecked = false;
+	private boolean serverReady = false;
 	private ArrayList<Position> food = new ArrayList<Position>();
 	
 	public ClientMonitor(){
 		nextMove[0] = Move.RIGHT;
 		nextMove[1] = Move.LEFT;
-		currentMove[0] = Move.RIGHT;
-		currentMove[1] = Move.LEFT;
 		shouldGrow[0] = false;
 		shouldGrow[1] = false;
 	}
 	
 	/** MOVE METHODS */
+	// Used by the inputhandler
 	public synchronized void putNextMove(int player, Move move){
 		nextMove[player - 1] = move;
 	}
 	
+	// Used in the server game loop
 	public synchronized Move getNextMove(int player){
 		return nextMove[player - 1];
 	}
 	
+	// Used in the server game loop
 	public synchronized void putCurrentMove(int player, Move move) throws InterruptedException{
 		while(moveChecked)	wait();
 		moveChecked = true;
@@ -39,6 +41,7 @@ public class ClientMonitor {
 		currentMove[player - 1] = move;
 	}
 	
+	// Used in the client game loop
 	public synchronized Move getCurrentMove(int player) throws InterruptedException{
 		while(!moveChecked)	wait();
 		moveChecked = false;
@@ -48,10 +51,13 @@ public class ClientMonitor {
 	
 	/** STATE METHODS */
 	public synchronized void setState(GameState state){
+		if(state == GameState.PLAY) serverReady = true;
 		gameState = state;
+		notifyAll();
 	}
 	
-	public synchronized GameState getState(){
+	public synchronized GameState getState() throws InterruptedException{
+		while(!serverReady) wait();
 		return gameState;
 	}
 	

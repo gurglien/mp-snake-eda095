@@ -6,12 +6,14 @@ import client.ClientMonitor.GameState;
 public class ClientGameLoop extends Thread{
 	private ClientMonitor monitor;
 	private GamePanel panel;
+	private int width;
 
-	public ClientGameLoop(ClientMonitor m){
+	public ClientGameLoop(ClientMonitor m, int playfieldWidth){
 		monitor = m;
-		
+		width = playfieldWidth;
+
 		// Create the GUI
-		panel = new GamePanel(monitor);
+		panel = new GamePanel(monitor, playfieldWidth);
 		JFrame frame = new JFrame("Snake");
 		frame.add(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,30 +24,34 @@ public class ClientGameLoop extends Thread{
 	}
 
 	public void run() {
-		Player p1 = new Player(1);
-		Player p2 = new Player(2);
+		Player p1 = new Player(1, width);
+		Player p2 = new Player(2, width);
 		long loopStart = System.currentTimeMillis();
-		while(monitor.getState() == GameState.PLAY){
-			// Limit update speed (fixa ngn sleep-anordning senare)
-			if(System.currentTimeMillis() - loopStart > 300){
+		try {
+			while(monitor.getState() == GameState.PLAY){
 				try {
 					p1.move(monitor.getCurrentMove(1));
 					p2.move(monitor.getCurrentMove(2));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				
 				if(monitor.getShouldGrow(1)) p1.grow();
 				if(monitor.getShouldGrow(2)) p2.grow();
-				
 				panel.updatePositions(p1.getSnake(), p2.getSnake(), monitor.getFood());
-				loopStart = System.currentTimeMillis();
+
+				loopStart += 300; // Update every 300 ms
+				long diff = loopStart - System.currentTimeMillis();
+				if(diff > 0) sleep(diff);
 			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		System.out.println(monitor.getState());
+
+		// TEMP
+		try {
+			System.out.println(monitor.getState());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
-	
-	// Will be moved to server side later
-//	public 
 }
