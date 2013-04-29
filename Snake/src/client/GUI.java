@@ -34,7 +34,8 @@ public class GUI extends JFrame{
 //Tables
 	
 	private JTable table;
-	
+//Panes
+	private JScrollPane scrollPane;
 //Buttons
 	
 	private JButton btnConnect;
@@ -161,7 +162,7 @@ public class GUI extends JFrame{
 		
 		table = new JTable(serverData, columnNames);
 		table.setBounds(22, 41, 375, 444);
-		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(22, 41, 402, 444);
 		table.setFillsViewportHeight(true);
 		serverPanel.add(scrollPane);
@@ -216,12 +217,14 @@ public class GUI extends JFrame{
 		//TODO find better way of updating the table, maybe something like:
 //		DefaultTableModel tModel = (DefaultTableModel) table.getModel();
 //		tModel.setDataVector(serverData, columnNames);
+		
 		table = new JTable(serverData, columnNames);
 		table.setBounds(22, 41, 375, 444);
-		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(22, 41, 402, 444);
 		table.setFillsViewportHeight(true);
-		serverPanel.add(scrollPane); //remove the current scrollPane first?
+		serverPanel.remove(serverPanel.getComponentCount()-1); //FIXME 
+		serverPanel.add(scrollPane);
 	}
 	
 	public Object[] getServer(){
