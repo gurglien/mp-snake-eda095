@@ -217,7 +217,7 @@ public class GUI extends JFrame{
 		//TODO find better way of updating the table, maybe something like:
 //		DefaultTableModel tModel = (DefaultTableModel) table.getModel();
 //		tModel.setDataVector(serverData, columnNames);
-		
+//		
 		table = new JTable(serverData, columnNames);
 		table.setBounds(22, 41, 375, 444);
 		scrollPane = new JScrollPane(table);
