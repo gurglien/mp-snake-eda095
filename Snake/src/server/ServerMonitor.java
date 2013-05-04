@@ -8,15 +8,25 @@ import client.Player.Move;
 
 public class ServerMonitor {
 	
-	private Move[] nextMove = new Move[2];
-	private Move[] currentMove = new Move[2];
-	private boolean[] shouldGrow = new boolean[2];
-	private GameState gameState = GameState.PLAY;
-	private boolean moveChecked = false;
-	private boolean serverReady = false;
-	private ArrayList<Position> food = new ArrayList<Position>();
+	private Move[] nextMove;
+	private Move[] currentMove;
+	private boolean[] shouldGrow;
+	private GameState gameState;
+	private boolean moveChecked;
+	private boolean serverReady;
+	private ArrayList<Position> food;
+	private ArrayList<Position> p1;
+	private ArrayList<Position> p2;
 	
 	public ServerMonitor(){
+		nextMove = new Move[2];
+		currentMove = new Move[2];
+		shouldGrow = new boolean[2];
+		gameState = GameState.PLAY;
+		moveChecked = false;
+		serverReady = false;
+		food = new ArrayList<Position>();
+		
 		nextMove[0] = Move.RIGHT;
 		nextMove[1] = Move.LEFT;
 		shouldGrow[0] = false;
