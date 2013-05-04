@@ -12,7 +12,7 @@ public class ServerLoop extends Thread {
 	private Player p2;
 	private int width;
 	private ArrayList<Position> food;
-	
+
 	public ServerLoop(ServerMonitor servMon, int width){
 		food = new ArrayList<Position>();
 		this.servMon = servMon;
@@ -23,16 +23,32 @@ public class ServerLoop extends Thread {
 
 		p1 = new Player(1, width);
 		p2 = new Player(2, width);
-		
-		while (true) {
-			Move m1 = servMon.getNextMove(1);
-			Move m2 = servMon.getNextMove(2);
-			p1.move(m1);
-			p2.move(m2);
+		long loopStart = System.currentTimeMillis();
+		try {
+
+			while (true) {
+				Move m1 = servMon.getNextMove(1);
+				Move m2 = servMon.getNextMove(2);
+				p1.move(m1);
+				p2.move(m2);
+				servMon.putCurrentMove(1, m1);
+				servMon.putCurrentMove(2, m2);
+				if(checkCollisions()){
+					break;					
+				}
+			}
+			
+			loopStart += 100; // Update every 100 ms
+			long diff = loopStart - System.currentTimeMillis();
+			if(diff > 0) sleep(diff);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
+
+
 	}
-	
+
 	private boolean checkCollisions(){
 		boolean c1 = p1.checkCollision(p2.getSnake());
 		boolean c2 = p2.checkCollision(p1.getSnake());
@@ -51,7 +67,7 @@ public class ServerLoop extends Thread {
 		}
 		return false;
 	}
-	
+
 	private void longestSnakeWins(int snakeLength1, int snakeLength2){
 		if(snakeLength1 > snakeLength2){
 			servMon.setState(GameState.WIN);	
@@ -82,9 +98,9 @@ public class ServerLoop extends Thread {
 	private void newFood(){
 		food.add(new Position(width/3, width/2));
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 }
