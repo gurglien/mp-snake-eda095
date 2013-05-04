@@ -26,18 +26,16 @@ public class MessageHandlerTests {
 			Position pos;
 
 
-
 			int code = mh.recieveCode();
 
 			switch (code) {
 
 			case Protocol.COM_SEND_POSITION:	pos = mh.recievePosition();
-			System.out
-			.println(pos);
-			mh.sendCode(Protocol.ANS_ACK);
-			break;
+												System.out.println(pos);
+												mh.sendCode(Protocol.ANS_ACK);
+												break;
 			default: 							System.out.println("default");
-			break;	
+												break;	
 			}
 
 
