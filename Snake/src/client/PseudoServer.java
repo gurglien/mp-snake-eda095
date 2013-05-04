@@ -7,38 +7,39 @@ import client.Player.Move;
 
 public class PseudoServer extends Thread{
 	private ClientMonitor monitor;
-	private Player p1 = new Player(1);
-	private Player p2 = new Player(2);
+	private Player p1;
+	private Player p2;
 	private ArrayList<Position> food = new ArrayList<Position>();
+	private int width;
 
-	public PseudoServer(ClientMonitor cm){
+	public PseudoServer(ClientMonitor cm, int playfieldWidth){
 		monitor = cm;
+		width = playfieldWidth;
+		p1 = new Player(1, width);
+		p2 = new Player(2, width);
 	}
 
 	public void run() {
 		newFood();
 		monitor.putFood(food);
-		
+
 		// Ska egentligen vara pausat innan vi sätter igång, men inte implementerat än
 		monitor.setState(GameState.PLAY);
 
 		long loopStart = System.currentTimeMillis();
-		while(monitor.getState() == GameState.PLAY){
-			//Limit update speed (fixa ngn sleep-anordning senare)
-			if(System.currentTimeMillis() - loopStart > 100){
+		try {
+			while(monitor.getState() == GameState.PLAY){
 				try {
 					Move m1 = monitor.getNextMove(1);
-					Move m2 = monitor.getNextMove(1);
+					Move m2 = monitor.getNextMove(2);
 					p1.move(m1);
 					p2.move(m2);
-					
-					
+
 					monitor.putCurrentMove(1, m1);
-					monitor.putCurrentMove(1, m2);
+					monitor.putCurrentMove(2, m2);
 					if(checkCollisions()){
 						break;					
 					}
-					
 
 					int nbrOfFood = food.size();
 					checkFood();
@@ -46,16 +47,19 @@ public class PseudoServer extends Thread{
 						newFood();
 						monitor.putFood(food);
 					}
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				loopStart = System.currentTimeMillis();
+
+				loopStart += 100; // Update every 100 ms
+				long diff = loopStart - System.currentTimeMillis();
+				if(diff > 0) sleep(diff);
 			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
-	
-	// DÅLIG/OFÄRDIG ÄN SÅ LÄNGE
+
 	private boolean checkCollisions(){
 		boolean c1 = p1.checkCollision(p2.getSnake());
 		boolean c2 = p2.checkCollision(p1.getSnake());
@@ -63,11 +67,11 @@ public class PseudoServer extends Thread{
 		if(c1 && c2){
 			longestSnakeWins(p1.getSnakeLength(), p2.getSnakeLength());
 			return true;
-		// Player 1 collided
+			// Player 1 collided
 		}else if(c1 && !c2){
 			monitor.setState(GameState.LOSE);
 			return true;
-		// Player 2 collided
+			// Player 2 collided
 		}else if(!c1 && c2){
 			monitor.setState(GameState.WIN);
 			return true;
@@ -101,8 +105,8 @@ public class PseudoServer extends Thread{
 			}
 		}
 	}
-	
+
 	private void newFood(){
-		food.add(new Position(110,130));
+		food.add(new Position(width/3, width/2));
 	}
 }

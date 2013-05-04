@@ -8,13 +8,15 @@ public class Player {
 	private int snakeLength = 3;
 	private boolean shouldGrow = false;
 	private LinkedList<Position> snake = new LinkedList<Position>();
+	private int playfieldWidth;
 
-	public Player(int player) throws IllegalArgumentException{
+	public Player(int player, int playfieldWidth) throws IllegalArgumentException{
 		if(player < 1 || player > 2){
 			throw new IllegalArgumentException("Only player 1 or 2 allowed.");
 		}
+		this.playfieldWidth = playfieldWidth;
 		prevDirection = (player == 1) ? Move.RIGHT : Move.LEFT;
-		Position head = (player == 1) ? new Position(100,100) : new Position(200,100);
+		Position head = (player == 1) ? new Position(playfieldWidth/4, playfieldWidth/2) : new Position((3*playfieldWidth)/4, playfieldWidth/2);
 
 		for(int i = 0; i < snakeLength; ++i){
 			snake.add(head);
@@ -32,16 +34,16 @@ public class Player {
 
 		switch(direction){
 		case LEFT : 
-			newHead = new Position(oldHead.x - 10, oldHead.y); // Remember to change when size and scale aren't hard coded anymore
+			newHead = new Position(oldHead.x - 1, oldHead.y); // Remember to change when size and scale aren't hard coded anymore
 			break;
 		case RIGHT : 
-			newHead = new Position(oldHead.x + 10, oldHead.y);
+			newHead = new Position(oldHead.x + 1, oldHead.y);
 			break;
 		case UP : 
-			newHead = new Position(oldHead.x, oldHead.y - 10);
+			newHead = new Position(oldHead.x, oldHead.y - 1);
 			break;
 		case DOWN : 
-			newHead = new Position(oldHead.x, oldHead.y + 10);
+			newHead = new Position(oldHead.x, oldHead.y + 1);
 			break;
 		default : 
 			throw new IllegalArgumentException("Incorrect movement direction.");
@@ -70,11 +72,10 @@ public class Player {
 		return snakeLength;
 	}
 	
-	// DÅLIG/OFÄRDIG ÄN SÅ LÄNGE
 	public boolean checkCollision(LinkedList<Position> enemySnake){
 		Position head = snake.getFirst();
 		// Wall collision
-		if(head.x < 0 || head.x + 10 > 500 || head.y < 0 || head.y + 10 > 500){ // Remember to change when size and scale aren't hard coded anymore
+		if(head.x < 0 || head.x + 1 > playfieldWidth || head.y < 0 || head.y + 1 > playfieldWidth){
 			return true;
 		}
 
