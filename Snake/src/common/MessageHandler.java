@@ -81,8 +81,10 @@ public class MessageHandler {
 		 * nu läses en line och returnerar. Viss overhead blir det ju men jag kan inte tänka mig att det spelar någon roll. 
 		 * 
 		 * FÖr tillfället får det vara så. ersätter kanske senare med att läsa bytevektor direkt från inputstreamen
+		 * 
+		 * Ska väl också kasta något annat fel än ConnectException
 		 */
-		public Position recievePosition() throws ConnectException{
+		public Position recievePosition() throws ConnectException {
 			Position pos;
 			try {
 				pos = new Position(reader.readLine());
@@ -92,6 +94,25 @@ public class MessageHandler {
 				throw new ConnectException("Could not create position");
 			}
 			
+		}
+		
+		/**
+		 * turns snake according to Protocol.java
+		 * @param turn
+		 */
+		public void sendTurn(int turn){
+			out.println(turn);
+		}
+		
+		public int recieveTurn() {
+			int ret = -1;
+			try {
+				String turn = reader.readLine();				
+				ret = Integer.parseInt(turn);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return ret;
 		}
 	
 	
