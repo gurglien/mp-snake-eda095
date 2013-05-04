@@ -39,7 +39,10 @@ public class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			model.startNewGame(gui.getServerName(), gui.getServerPort(), gui.getPassword());
+			model.initiateNewGame(gui.getServerName(), gui.getServerPort(), gui.getPassword());
+			GamePanel game = gui.startGame(model.getMonitor(), 50);
+			model.addGamePanel(game);
+			model.startInitiatedGame();
 		}
 		
 	}
