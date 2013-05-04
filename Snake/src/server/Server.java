@@ -19,12 +19,18 @@ public class Server {
 			String message = "";
 			Position pos;
 			int code;
+			ServerMonitor servMon = new ServerMonitor();
+			
 			
 			
 //			Socket socket = serverSocket.accept();
 //			MessageHandler mh = new MessageHandler(socket);
 			
-			//vänta på inkommande connections, skapa trådar
+			//vänta på inkommande connections
+			//skapa trådar för: 
+				//inkommande connections
+				//en tråd för att skicka state till client?
+				//en tråd som slumpar fram käk på spelplanen? (servern ska ej accessa monitorn)
 			
 			
 			
