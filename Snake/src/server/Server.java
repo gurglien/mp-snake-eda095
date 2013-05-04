@@ -26,7 +26,7 @@ public class Server {
 //			Socket socket = serverSocket.accept();
 //			MessageHandler mh = new MessageHandler(socket);
 			
-			//vänta på inkommande connections
+			//vänta på inkommande connections - starta trådar
 			//skapa trådar för: 
 				//inkommande connections
 				//en tråd för att skicka state till client?
