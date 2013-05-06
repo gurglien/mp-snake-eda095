@@ -2,6 +2,7 @@ package client;
 import javax.swing.JFrame;
 
 import client.ClientMonitor.GameState;
+import client.Player.Move;
 
 public class ClientGameLoop extends Thread{
 	private ClientMonitor monitor;
@@ -30,8 +31,9 @@ public class ClientGameLoop extends Thread{
 		try {
 			while(monitor.getState() == GameState.PLAY){
 				try {
-					p1.move(monitor.getCurrentMove(1));
-					p2.move(monitor.getCurrentMove(2));
+					Move[] moves = monitor.getCurrentMoves();
+					p1.move(moves[0]);
+					p2.move(moves[1]);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

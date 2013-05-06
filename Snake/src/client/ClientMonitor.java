@@ -7,46 +7,43 @@ import client.Player.Move;
 
 public class ClientMonitor {
 	public static enum GameState{PLAY, WIN, LOSE, DRAW};
-	private Move[] nextMove = new Move[2];
-	private Move[] currentMove = new Move[2];
-	private boolean[] shouldGrow = new boolean[2];
+	private Move nextMove;
+	private Move[] currentMoves = new Move[2];
+	private boolean[] shouldGrow = {false, false};
 	private GameState gameState = GameState.PLAY;
 	private boolean moveChecked = false;
 	private boolean serverReady = false;
 	private ArrayList<Position> food = new ArrayList<Position>();
 	
 	public ClientMonitor(){
-		nextMove[0] = Move.RIGHT;
-		nextMove[1] = Move.LEFT;
-		shouldGrow[0] = false;
-		shouldGrow[1] = false;
+		nextMove = Move.RIGHT;
 	}
 	
 	/** MOVE METHODS */
 	// Used by the inputhandler
-	public synchronized void putNextMove(int player, Move move){
-		nextMove[player - 1] = move;
+	public synchronized void putNextMove(Move move){
+		nextMove = move;
 	}
 	
 	// Used in the server game loop
-	public synchronized Move getNextMove(int player){
-		return nextMove[player - 1];
+	public synchronized Move getNextMove(){
+		return nextMove;
 	}
 	
 	// Used in the server game loop
-	public synchronized void putCurrentMove(int player, Move move) throws InterruptedException{
+	public synchronized void putCurrentMoves(Move[] moves) throws InterruptedException{
 		while(moveChecked)	wait();
 		moveChecked = true;
 		notifyAll();
-		currentMove[player - 1] = move;
+		currentMoves = moves;
 	}
 	
 	// Used in the client game loop
-	public synchronized Move getCurrentMove(int player) throws InterruptedException{
+	public synchronized Move[] getCurrentMoves() throws InterruptedException{
 		while(!moveChecked)	wait();
 		moveChecked = false;
 		notifyAll();
-		return currentMove[player - 1];
+		return currentMoves.clone();
 	}
 	
 	/** STATE METHODS */

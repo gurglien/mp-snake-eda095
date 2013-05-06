@@ -30,17 +30,20 @@ public class PseudoServer extends Thread{
 		try {
 			while(monitor.getState() == GameState.PLAY){
 				try {
-					Move m1 = monitor.getNextMove(1);
-					Move m2 = monitor.getNextMove(2);
+					// Send to server
+					Move m1 = monitor.getNextMove();
+					Move m2 = Move.LEFT;
+					
+					// Compute on server
 					p1.move(m1);
 					p2.move(m2);
-
-					monitor.putCurrentMove(1, m1);
-					monitor.putCurrentMove(2, m2);
+					Move[] moves = {m1, m2};
+					
+					// Return new info to client
+					monitor.putCurrentMoves(moves); // Send moves first so the client know the last step in case of collision
 					if(checkCollisions()){
 						break;					
 					}
-
 					int nbrOfFood = food.size();
 					checkFood();
 					if(nbrOfFood != food.size()){

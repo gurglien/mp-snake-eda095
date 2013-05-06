@@ -91,7 +91,7 @@ public class GamePanel extends JPanel{
 				final Move move = m;
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						monitor.putNextMove(1, move);
+						monitor.putNextMove(move);
 					}
 				});
 			}

@@ -34,7 +34,7 @@ public class Player {
 
 		switch(direction){
 		case LEFT : 
-			newHead = new Position(oldHead.x - 1, oldHead.y); // Remember to change when size and scale aren't hard coded anymore
+			newHead = new Position(oldHead.x - 1, oldHead.y);
 			break;
 		case RIGHT : 
 			newHead = new Position(oldHead.x + 1, oldHead.y);
