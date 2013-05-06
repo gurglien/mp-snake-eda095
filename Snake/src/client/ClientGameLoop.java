@@ -1,5 +1,4 @@
 package client;
-import javax.swing.JFrame;
 
 import client.ClientMonitor.GameState;
 import client.Player.Move;

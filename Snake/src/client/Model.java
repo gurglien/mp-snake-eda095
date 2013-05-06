@@ -36,7 +36,7 @@ public class Model {
 		monitor = new ClientMonitor();		
 		int playfieldWidth = 50; // Detta r‰knas om till pixlar senare, varje rad/kolumn ‰r 10 px bred, spelaren ‰r ocksÂ 10 px bred.
 		game = new ClientGameLoop(monitor, playfieldWidth);
-		//skall ändras till en riktig server som använder sig av serverPort och liknande
+		//skall ändras till en riktig server som använder sig av serverPort och liknande TODO
 		serv = new PseudoServer(monitor, playfieldWidth); 
 	}
 	
