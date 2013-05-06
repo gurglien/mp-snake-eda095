@@ -20,20 +20,23 @@ public class Server {
 			Position pos;
 			int code;
 			ServerMonitor servMon = new ServerMonitor();
+			int width = 99;
 			
 			
+			ServerLoop game = new ServerLoop(servMon, width);
+			Socket socket1 = serverSocket.accept();
+			Socket socket2 = serverSocket.accept();
+			//vänta på inkommande connections - starta trådar
 			
-//			Socket socket = serverSocket.accept();
+			//skapa två messagehandlers eller ska messagehandler innehålla lista på sockets?
 //			MessageHandler mh = new MessageHandler(socket);
 			
-			//vänta på inkommande connections - starta trådar
+			game.start();
+			
+			
 			//skapa trådar för: 
-				//inkommande connections
 				//en tråd för att skicka state till client?
-				//en tråd som slumpar fram käk på spelplanen? (servern ska ej accessa monitorn)
-			
-			
-			
+			//hur slumpa fram käk?
 			
 	
 			

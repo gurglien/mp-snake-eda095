@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import autodetect.ServerFinder;
 
 public class Model {
-
+	private ClientGameLoop game;
+	private PseudoServer serv;
+	private ClientMonitor monitor;
 	/**
 	 * Retrives a matrix of the servers that are online currently.
 	 * @return 
@@ -30,9 +32,30 @@ public class Model {
 	 * @param serverPort
 	 * @param password
 	 */
-	public void startNewGame(String serverName, String serverPort,String password) {
-		// TODO Password kan ignoreras sï¿½ lï¿½nge dï¿½ det inte ï¿½r nï¿½dvï¿½ndigt, dock lï¿½ttare att lï¿½gga till senare om vi vill.
-		
+	public void initiateNewGame(String serverName, String serverPort,String password) {
+		monitor = new ClientMonitor();		
+		int playfieldWidth = 50; // Detta räknas om till pixlar senare, varje rad/kolumn är 10 px bred, spelaren är också 10 px bred.
+		game = new ClientGameLoop(monitor, playfieldWidth);
+		//skall Šndras till en riktig server som anvŠnder sig av serverPort och liknande
+		serv = new PseudoServer(monitor, playfieldWidth); 
+	}
+	
+	public void addGamePanel(GamePanel panel){
+		game.setPanel(panel);
+	}
+	
+	public void startInitiatedGame(){
+		if(serv.equals(null) && game.equals(null)){
+			//TODO game not yet initialised unsupported behaviuor.
+		}else{
+		serv.start();
+		game.start();
+		}
+	}
+	
+
+	public ClientMonitor getMonitor(){
+		return monitor;
 	}
 	/**
 	 * Connect to an already online server.

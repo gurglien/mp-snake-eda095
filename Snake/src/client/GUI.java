@@ -36,6 +36,7 @@ public class GUI extends JFrame{
 	private JTable table;
 //Panes
 	private JScrollPane scrollPane;
+	private JTabbedPane tabbedPane;
 //Buttons
 	
 	private JButton btnConnect;
@@ -44,8 +45,11 @@ public class GUI extends JFrame{
 	
 //Panels
 	private JPanel serverPanel;
+	private GamePanel game;
 	
-	 //TODO This data is temporary for display purposes, will be changed later.
+	
+	
+//TODO This data is temporary for display purposes, will be changed later.
 //	private Object[][] serverData = {
 //		    {"Kathy", "Smith",
 //		     30000, new Integer(5), new Boolean(false)},
@@ -76,7 +80,7 @@ public class GUI extends JFrame{
 		setTitle("MPSnake Pro");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 649, 666);
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel settingsPanel = new JPanel();
@@ -214,10 +218,9 @@ public class GUI extends JFrame{
 	public void setServerTable(Object[][] serverData){
 		this.serverData = serverData;
 		
-		//TODO find better way of updating the table, maybe something like:
+//TODO find better way of updating the table, maybe something like:
 //		DefaultTableModel tModel = (DefaultTableModel) table.getModel();
-//		tModel.setDataVector(serverData, columnNames);
-//		
+//		tModel.setDataVector(serverData, columnNames);		
 		table = new JTable(serverData, columnNames);
 		table.setBounds(22, 41, 375, 444);
 		scrollPane = new JScrollPane(table);
@@ -225,6 +228,17 @@ public class GUI extends JFrame{
 		table.setFillsViewportHeight(true);
 		serverPanel.remove(serverPanel.getComponentCount()-1); //FIXME 
 		serverPanel.add(scrollPane);
+	}
+	
+	public GamePanel startGame(ClientMonitor monitor, int size){
+		game = new GamePanel(monitor, size);
+		tabbedPane.addTab("Game", null, game, null);
+		tabbedPane.setSelectedIndex(2);
+		return game;
+	}
+	
+	public void removeGame(){
+		tabbedPane.remove(game);
 	}
 	
 	public Object[] getServer(){

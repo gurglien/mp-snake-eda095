@@ -14,6 +14,7 @@ public class ClientGameLoop extends Thread{
 		width = playfieldWidth;
 
 		// Create the GUI
+		/*
 		panel = new GamePanel(monitor, playfieldWidth);
 		JFrame frame = new JFrame("Snake");
 		frame.add(panel);
@@ -22,6 +23,11 @@ public class ClientGameLoop extends Thread{
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setVisible(true);
+		*/
+	}
+	
+	public void setPanel(GamePanel panel){
+		this.panel = panel;
 	}
 
 	public void run() {

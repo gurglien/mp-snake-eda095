@@ -15,8 +15,6 @@ public class ServerMonitor {
 	private boolean moveChecked;
 	private boolean serverReady;
 	private ArrayList<Position> food;
-	private ArrayList<Position> p1;
-	private ArrayList<Position> p2;
 	
 	public ServerMonitor(){
 		nextMove = new Move[2];
@@ -31,12 +29,14 @@ public class ServerMonitor {
 		nextMove[1] = Move.LEFT;
 		shouldGrow[0] = false;
 		shouldGrow[1] = false;
+
 	}
 	
 	
 	/** MOVE METHODS */
 	// Used by the inputhandler
 	public synchronized void putNextMove(int player, Move move){
+		
 		nextMove[player - 1] = move;
 	}
 	
