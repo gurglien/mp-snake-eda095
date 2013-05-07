@@ -13,6 +13,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import closePane.ButtonTabComponent;
+import closePane.CloseTabbedPane;
+
 /**
  * Menu GUI
  * @author marcus
@@ -35,7 +38,7 @@ public class GUI extends JFrame{
 	private JTable table;
 //Panes
 	private JScrollPane scrollPane;
-	private JTabbedPane tabbedPane;
+	private CloseTabbedPane tabbedPane;
 //Buttons
 	
 	private JButton btnConnect;
@@ -79,7 +82,10 @@ public class GUI extends JFrame{
 		setTitle("MPSnake Pro");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 649, 666);
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new CloseTabbedPane();
+		
+		
+
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel settingsPanel = new JPanel();
@@ -160,6 +166,9 @@ public class GUI extends JFrame{
 		scrollPane.setBounds(22, 41, 402, 444);
 		table.setFillsViewportHeight(true);
 		serverPanel.add(scrollPane);
+		
+		tabbedPane.setTabComponentAt(tabbedPane.indexOfTab("Settings"), new ButtonTabComponent(tabbedPane));
+		tabbedPane.setTabComponentAt(tabbedPane.indexOfTab("Servers"), new ButtonTabComponent(tabbedPane));
 	}
 	
 	// Methods that the controller uses to add actionlisteners to the GUI.

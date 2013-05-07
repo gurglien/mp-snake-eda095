@@ -11,14 +11,20 @@ public class PseudoServer extends Thread{
 	private Player p2;
 	private ArrayList<Position> food = new ArrayList<Position>();
 	private int width;
+	private boolean runs;
 
 	public PseudoServer(ClientMonitor cm, int playfieldWidth){
 		monitor = cm;
 		width = playfieldWidth;
 		p1 = new Player(1, width);
 		p2 = new Player(2, width);
+		runs = true;
 	}
 
+	public void stopThread(){
+		runs = false;
+	}
+	
 	public void run() {
 		newFood();
 		monitor.putFood(food);
@@ -28,7 +34,7 @@ public class PseudoServer extends Thread{
 
 		long loopStart = System.currentTimeMillis();
 		try {
-			while(monitor.getState() == GameState.PLAY){
+			while(monitor.getState() == GameState.PLAY && runs){
 				try {
 					// Send to server
 					Move m1 = monitor.getNextMove();

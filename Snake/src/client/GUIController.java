@@ -8,6 +8,8 @@ import javax.swing.JButton;
 public class GUIController {
 	private GUI gui;
 	private Model model;
+	private boolean gameOn;
+	private GamePanel game;
 	
 	public GUIController(GUI gui, Model model){
 		this.gui = gui;
@@ -48,12 +50,18 @@ public class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(gameOn){
+				model.closeGame();
+				gui.removeGame();
+			}
 			model.initiateNewGame(gui.getServerName(), gui.getServerPort());
-			GamePanel game = gui.startGame(model.getMonitor(), 50);
+			game = gui.startGame(model.getMonitor(), 50);
 			model.addGamePanel(game);
 			model.startServer();
 			//TODO server needs to tell when the game shall start
 			model.startInitiatedGame();
+			gameOn = true;
+			
 		}
 		
 	}

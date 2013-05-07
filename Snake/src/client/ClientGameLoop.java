@@ -7,10 +7,12 @@ public class ClientGameLoop extends Thread{
 	private ClientMonitor monitor;
 	private GamePanel panel;
 	private int width;
+	private boolean stop;
 
 	public ClientGameLoop(ClientMonitor m, int playfieldWidth){
 		monitor = m;
 		width = playfieldWidth;
+		stop = true;
 
 		// Create the GUI
 		/*
@@ -28,13 +30,17 @@ public class ClientGameLoop extends Thread{
 	public void setPanel(GamePanel panel){
 		this.panel = panel;
 	}
+	
+	public void stopThread(){
+		stop = false;
+	}
 
 	public void run() {
 		Player p1 = new Player(1, width);
 		Player p2 = new Player(2, width);
 		long loopStart = System.currentTimeMillis();
 		try {
-			while(monitor.getState() == GameState.PLAY){
+			while(monitor.getState() == GameState.PLAY && stop){
 				try {
 					Move[] moves = monitor.getCurrentMoves();
 					p1.move(moves[0]);

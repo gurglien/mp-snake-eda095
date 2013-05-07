@@ -42,6 +42,13 @@ public class Model {
 		serv = new PseudoServer(monitor, playfieldWidth); 
 	}
 	
+	public void closeGame(){
+		game.stopThread();
+		serv.stopThread();
+		game = null;
+		serv = null;
+	}
+	
 	public void addGamePanel(GamePanel panel){
 		game.setPanel(panel);
 	}
