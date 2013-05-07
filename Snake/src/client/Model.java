@@ -3,12 +3,15 @@ package client;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
+import server.Server;
+
 import autodetect.ServerFinder;
 
 public class Model {
 	private ClientGameLoop game;
 	private PseudoServer serv;
 	private ClientMonitor monitor;
+	private Server server;
 	/**
 	 * Retrives a matrix of the servers that are online currently.
 	 * @return 
@@ -30,9 +33,8 @@ public class Model {
 	 * Creates a new game with the current paramaters resulting in a gameserver start and a game client start.
 	 * @param serverName
 	 * @param serverPort
-	 * @param password
 	 */
-	public void initiateNewGame(String serverName, String serverPort,String password) {
+	public void initiateNewGame(String serverName, String serverPort) {
 		monitor = new ClientMonitor();		
 		int playfieldWidth = 50; // Detta räknas om till pixlar senare, varje rad/kolumn är 10 px bred, spelaren är också 10 px bred.
 		game = new ClientGameLoop(monitor, playfieldWidth);
@@ -70,7 +72,6 @@ public class Model {
 	 * @param server
 	 */
 	public void connectToServer(Object[] server) {
-		// TODO Auto-generated method stub
 		
 	}
 

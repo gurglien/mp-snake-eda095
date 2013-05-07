@@ -27,7 +27,6 @@ public class GUI extends JFrame{
 	private JTextField manualServerName;
 	private JTextField playerNameField;
 	private JTextField serverNameField;
-	private JTextField passwordField;
 	private JTextField serverPortField;;
 
 
@@ -108,15 +107,6 @@ public class GUI extends JFrame{
 		btnNewGame = new JButton("New Game");
 		btnNewGame.setBounds(66, 386, 117, 29);
 		settingsPanel.add(btnNewGame);
-		
-		JLabel lblPassword = new JLabel("Password*:");
-		lblPassword.setBounds(50, 276, 97, 16);
-		settingsPanel.add(lblPassword);
-		
-		passwordField = new JTextField();
-		passwordField.setBounds(50, 304, 134, 28);
-		settingsPanel.add(passwordField);
-		passwordField.setColumns(10);
 		
 		JLabel lblPort = new JLabel("Port:");
 		lblPort.setBounds(50, 208, 61, 16);
@@ -203,9 +193,6 @@ public class GUI extends JFrame{
 		return serverNameField.getText();
 	}
 
-	public String getPassword() {
-		return passwordField.getText();
-	}
 	
 	public String getServerPort() {
 		return serverPortField.getText();

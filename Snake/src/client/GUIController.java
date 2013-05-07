@@ -25,7 +25,16 @@ public class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			model.connectToServer(gui.getServer());
+			String manualServerName = gui.getManualServerName();
+			String manualServerPort = gui.getServerPort();
+			if(manualServerName.equals(null) && manualServerPort.equals(null)){
+				model.connectToServer(gui.getServer());
+			}else{
+				Object[] obj = new Object[2];
+				obj[0] = gui.getManualServerName();
+				obj[1] = gui.getPlayerName();
+				model.connectToServer(obj);
+			}
 		}
 		
 	}
@@ -39,9 +48,11 @@ public class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			model.initiateNewGame(gui.getServerName(), gui.getServerPort(), gui.getPassword());
+			model.initiateNewGame(gui.getServerName(), gui.getServerPort());
 			GamePanel game = gui.startGame(model.getMonitor(), 50);
 			model.addGamePanel(game);
+			model.startServer();
+			//TODO server needs to tell when the game shall start
 			model.startInitiatedGame();
 		}
 		
