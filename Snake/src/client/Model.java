@@ -44,11 +44,19 @@ public class Model {
 		game.setPanel(panel);
 	}
 	
+	public void startServer(){
+		if(serv.equals(null)){
+			
+		}else{
+					serv.start();
+		}
+	}
+	
 	public void startInitiatedGame(){
 		if(serv.equals(null) && game.equals(null)){
 			//TODO game not yet initialised unsupported behaviuor.
 		}else{
-		serv.start();
+		
 		game.start();
 		}
 	}
