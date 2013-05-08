@@ -1,5 +1,6 @@
 package client;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -9,6 +10,7 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import client.ClientMonitor.GameState;
 import client.Player.Move;
 
 public class GamePanel extends JPanel{
@@ -63,6 +65,8 @@ public class GamePanel extends JPanel{
 		}else{
 			g.setColor(Color.black);
 			g.fillRect(0, 0, width, width);
+			g.setColor(Color.white);
+			g.drawString("TEMP: Press SPACE to play.", 100, 100);
 			g.dispose();
 		}
 	}
@@ -86,12 +90,23 @@ public class GamePanel extends JPanel{
 			break;
 			case KeyEvent.VK_DOWN : m = Move.DOWN;
 			break;
+			case KeyEvent.VK_SPACE : 
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						monitor.setState(GameState.PLAY);
+					}
+				});
+				break;
 			}
 			if(m != null){
 				final Move move = m;
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						monitor.putNextMove(move);
+						try {
+							monitor.putNextMove(move);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				});
 			}

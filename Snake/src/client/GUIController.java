@@ -57,7 +57,7 @@ public class GUIController {
 			model.initiateNewGame(gui.getServerName(), gui.getServerPort());
 			game = gui.startGame(model.getMonitor(), 50);
 			model.addGamePanel(game);
-			model.startServer();
+//			model.startServer();
 			//TODO server needs to tell when the game shall start
 			model.startInitiatedGame();
 			gameOn = true;

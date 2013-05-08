@@ -6,12 +6,13 @@ import client.Player.Move;
 
 
 public class ClientMonitor {
-	public static enum GameState{PLAY, WIN, LOSE, DRAW};
+	public static enum GameState{PLAY, WIN, LOSE, DRAW, WAIT, CLOSE};
 	private Move nextMove;
 	private Move[] currentMoves = new Move[2];
 	private boolean[] shouldGrow = {false, false};
-	private GameState gameState = GameState.PLAY;
+	private GameState gameState = GameState.WAIT;
 	private boolean moveChecked = false;
+	private boolean moveChanged = false;
 	private boolean serverReady = false;
 	private ArrayList<Position> food = new ArrayList<Position>();
 	
@@ -19,23 +20,29 @@ public class ClientMonitor {
 		nextMove = Move.RIGHT;
 	}
 	
-	/** MOVE METHODS */
+	/** MOVE METHODS 
+	 * @throws InterruptedException */
 	// Used by the inputhandler
-	public synchronized void putNextMove(Move move){
+	public synchronized void putNextMove(Move move) throws InterruptedException{
+		while(!serverReady) wait();
 		nextMove = move;
+		moveChanged = true;
+		notifyAll();
 	}
 	
 	// Used in the server game loop
-	public synchronized Move getNextMove(){
+	public synchronized Move getNextMove() throws InterruptedException{
+		while(!moveChanged) wait();
+		moveChanged = false;
 		return nextMove;
 	}
 	
 	// Used in the server game loop
 	public synchronized void putCurrentMoves(Move[] moves) throws InterruptedException{
-		while(moveChecked)	wait();
+		while(moveChecked) wait();
 		moveChecked = true;
 		notifyAll();
-		currentMoves = moves;
+		currentMoves = moves.clone();
 	}
 	
 	// Used in the client game loop

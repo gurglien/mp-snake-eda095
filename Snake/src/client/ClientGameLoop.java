@@ -1,4 +1,7 @@
 package client;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
 
 import client.ClientMonitor.GameState;
 import client.Player.Move;
@@ -7,40 +10,41 @@ public class ClientGameLoop extends Thread{
 	private ClientMonitor monitor;
 	private GamePanel panel;
 	private int width;
-	private boolean stop;
 
 	public ClientGameLoop(ClientMonitor m, int playfieldWidth){
 		monitor = m;
 		width = playfieldWidth;
-		stop = true;
 
-		// Create the GUI
-		/*
-		panel = new GamePanel(monitor, playfieldWidth);
-		JFrame frame = new JFrame("Snake");
-		frame.add(panel);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(500, 500);
-		frame.setLocationRelativeTo(null);
-		frame.setResizable(false);
-		frame.setVisible(true);
-		*/
+		// Create the GUI 
+		// USED FOR TESTING PURPOSES, DO NOT REMOVE
+//		panel = new GamePanel(monitor, playfieldWidth);
+//		JFrame frame = new JFrame("Snake");
+//		frame.add(panel);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setSize(500, 500);
+//		frame.setLocationRelativeTo(null);
+//		frame.setResizable(false);
+//		frame.setVisible(true);
 	}
 	
 	public void setPanel(GamePanel panel){
 		this.panel = panel;
 	}
-	
-	public void stopThread(){
-		stop = false;
-	}
 
 	public void run() {
 		Player p1 = new Player(1, width);
 		Player p2 = new Player(2, width);
-		long loopStart = System.currentTimeMillis();
+		// -TEMP--- Just to avoid nullpointerexc before the food transfer from server is implemented
+		ArrayList<Position> food = new ArrayList<Position>();
+		food.add(new Position(width/3, width/2));
+		monitor.putFood(food);
+		// --------
+		
 		try {
-			while(monitor.getState() == GameState.PLAY && stop){
+			monitor.getState(); // Needed to postpone timer start until server is ready
+			long loopStart = System.currentTimeMillis();
+			
+			while(monitor.getState() == GameState.PLAY){
 				try {
 					Move[] moves = monitor.getCurrentMoves();
 					p1.move(moves[0]);
@@ -52,7 +56,7 @@ public class ClientGameLoop extends Thread{
 				if(monitor.getShouldGrow(2)) p2.grow();
 				panel.updatePositions(p1.getSnake(), p2.getSnake(), monitor.getFood());
 
-				loopStart += 300; // Update every 300 ms
+				loopStart += 150; // Update every 150 ms (this should be faster than ServerLoop)
 				long diff = loopStart - System.currentTimeMillis();
 				if(diff > 0) sleep(diff);
 			}
@@ -60,7 +64,7 @@ public class ClientGameLoop extends Thread{
 			e.printStackTrace();
 		}
 
-		// TEMP
+		// TEMP - print Win/Lose/Draw
 		try {
 			System.out.println(monitor.getState());
 		} catch (InterruptedException e) {

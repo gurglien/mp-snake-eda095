@@ -20,33 +20,39 @@ public class ServerLoop extends Thread {
 	}
 
 	public void run(){
-
 		p1 = new Player(1, width);
 		p2 = new Player(2, width);
-		long loopStart = System.currentTimeMillis();
+		
+		newFood();
+		servMon.putFood(food);
+		
 		try {
-
-			while (true) {
-				Move m1 = servMon.getNextMove(1);
-				Move m2 = servMon.getNextMove(2);
-				p1.move(m1);
-				p2.move(m2);
-				servMon.putCurrentMove(1, m1);
-				servMon.putCurrentMove(2, m2);
+			servMon.getState(); // Needed to postpone timer start until server is ready
+			long loopStart = System.currentTimeMillis();
+			
+			while (servMon.getState() == GameState.PLAY) {
+				Move[] moves = servMon.getNextMoves();
+				p1.move(moves[0]);
+				p2.move(moves[1]);
+				servMon.putCurrentMoves(moves);
 				if(checkCollisions()){
 					break;					
 				}
+				
+				int nbrOfFood = food.size();
+				checkFood();
+				if(nbrOfFood != food.size()){
+					newFood();
+					servMon.putFood(food);
+				}
+				
+				loopStart += 300; // Update every 300 ms (this will determine the speed of the game)
+				long diff = loopStart - System.currentTimeMillis();
+				if(diff > 0) sleep(diff);
 			}
-			
-			loopStart += 100; // Update every 100 ms
-			long diff = loopStart - System.currentTimeMillis();
-			if(diff > 0) sleep(diff);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	private boolean checkCollisions(){
@@ -95,6 +101,7 @@ public class ServerLoop extends Thread {
 		}
 	}
 
+	// TODO This should place new food at random and free positions
 	private void newFood(){
 		food.add(new Position(width/3, width/2));
 	}

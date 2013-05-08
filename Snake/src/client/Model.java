@@ -1,17 +1,24 @@
 package client;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import client.ClientMonitor.GameState;
+
 import server.Server;
+import server.ServerMonitor;
 
 import autodetect.ServerFinder;
 
 public class Model {
 	private ClientGameLoop game;
-	private PseudoServer serv;
-	private ClientMonitor monitor;
+	private ClientMonitor clientMonitor;
+	private ServerMonitor serverMonitor;
 	private Server server;
+	private Socket socket;
 	/**
 	 * Retrives a matrix of the servers that are online currently.
 	 * @return 
@@ -35,34 +42,64 @@ public class Model {
 	 * @param serverPort
 	 */
 	public void initiateNewGame(String serverName, String serverPort) {
-		monitor = new ClientMonitor();		
-		int playfieldWidth = 50; // Detta räknas om till pixlar senare, varje rad/kolumn är 10 px bred, spelaren är också 10 px bred.
-		game = new ClientGameLoop(monitor, playfieldWidth);
-		//skall Šndras till en riktig server som anvŠnder sig av serverPort och liknande TODO
-		serv = new PseudoServer(monitor, playfieldWidth); 
+		int playfieldWidth = 50;
+		int port = 0;
+		if(serverPort.equals("")){
+			System.err.println("Error: You need to specify a port number");
+			System.exit(1);
+		}else{
+			port = Integer.parseInt(serverPort);
+		}
+		String host = "localhost"; // TODO Change hard coded "localhost", so it's possible to connect to other servers
+		
+		serverMonitor = new ServerMonitor();
+		server = new Server(serverMonitor, playfieldWidth, port);
+		server.start();
+		
+		try {
+			clientMonitor = new ClientMonitor();
+			socket = new Socket(host, port);
+			
+			game = new ClientGameLoop(clientMonitor, playfieldWidth);
+			
+			ClientSender cs = new ClientSender(clientMonitor, socket);
+			cs.start();
+			
+			ClientReceiver cr = new ClientReceiver(clientMonitor, socket);
+			cr.start();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void closeGame(){
-		game.stopThread();
-		serv.stopThread();
+		clientMonitor.setState(GameState.CLOSE);
+		serverMonitor.setState(GameState.CLOSE);
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		game = null;
-		serv = null;
+		server = null;
 	}
 	
 	public void addGamePanel(GamePanel panel){
 		game.setPanel(panel);
 	}
 	
-	public void startServer(){
-		if(serv.equals(null)){
-			
-		}else{
-					serv.start();
-		}
-	}
+//	public void startServer(){
+//		if(server.equals(null)){
+//			
+//		}else{
+//					server.start();
+//		}
+//	}
 	
 	public void startInitiatedGame(){
-		if(serv.equals(null) && game.equals(null)){
+		if(server.equals(null) && game.equals(null)){
 			//TODO game not yet initialised unsupported behaviuor.
 		}else{
 		
@@ -72,7 +109,7 @@ public class Model {
 	
 
 	public ClientMonitor getMonitor(){
-		return monitor;
+		return clientMonitor;
 	}
 	/**
 	 * Connect to an already online server.

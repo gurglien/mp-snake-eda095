@@ -8,25 +8,25 @@ import client.Player.Move;
 
 public class ServerMonitor {
 	
-	private Move[] nextMove;
-	private Move[] currentMove;
+	private Move[] nextMoves;
+	private Move[] currentMoves;
 	private boolean[] shouldGrow;
 	private GameState gameState;
-	private boolean moveChecked;
+	private boolean movesChecked;
 	private boolean serverReady;
 	private ArrayList<Position> food;
 	
 	public ServerMonitor(){
-		nextMove = new Move[2];
-		currentMove = new Move[2];
+		nextMoves = new Move[2];
+		currentMoves = new Move[2];
 		shouldGrow = new boolean[2];
-		gameState = GameState.PLAY;
-		moveChecked = false;
+		gameState = GameState.WAIT;
+		movesChecked = false;
 		serverReady = false;
 		food = new ArrayList<Position>();
 		
-		nextMove[0] = Move.RIGHT;
-		nextMove[1] = Move.LEFT;
+		nextMoves[0] = Move.RIGHT;
+		nextMoves[1] = Move.LEFT;
 		shouldGrow[0] = false;
 		shouldGrow[1] = false;
 
@@ -34,38 +34,26 @@ public class ServerMonitor {
 	
 	
 	/** MOVE METHODS */
-	// Used by the inputhandler
 	public synchronized void putNextMove(int player, Move move){
-		
-		nextMove[player - 1] = move;
+		nextMoves[player - 1] = move;
 	}
 	
-	// Used in the server game loop
-	public synchronized Move getNextMove(int player){
-		return nextMove[player - 1];
+	public synchronized Move[] getNextMoves(){
+		return nextMoves.clone();
 	}
 	
-	// Used in the server game loop
-	public synchronized void putCurrentMove(int player, Move move) throws InterruptedException{
-		
-		while(moveChecked) {
-			wait();			
-		}
-		
-		moveChecked = true;
+	public synchronized void putCurrentMoves(Move[] moves) throws InterruptedException{
+		while(movesChecked)	wait();
+		movesChecked = true;
 		notifyAll();
-		currentMove[player - 1] = move;
+		currentMoves = moves.clone();
 	}
 	
-	// Used in the client game loop
-	public synchronized Move getCurrentMove(int player) throws InterruptedException{
-		while(!moveChecked) {	
-			wait();
-		}
-		
-		moveChecked = false;
+	public synchronized Move[] getCurrentMoves() throws InterruptedException{
+		while(!movesChecked) wait();
+		movesChecked = false;
 		notifyAll();
-		return currentMove[player - 1];
+		return currentMoves.clone();
 	}
 	
 	/** STATE METHODS */
@@ -81,7 +69,6 @@ public class ServerMonitor {
 		while(!serverReady) {
 			wait();
 		}
-		
 		return gameState;
 	}
 	

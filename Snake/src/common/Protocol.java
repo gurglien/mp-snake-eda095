@@ -3,6 +3,14 @@ package common;
 
 public class Protocol {
 	public static final int 
+	TURN_LEFT 	= 31,
+	TURN_RIGHT 	= 32,
+	TURN_UP 	= 33,
+	TURN_DOWN 	= 34,
+	SHOULD_GROW_TRUE = 35,
+	SHOULD_GROW_FALSE = 36,
+	READY = 37,
+	
 	COM_TURN_LEFT 	= 1,
 	COM_TURN_RIGHT 	= 2,
 	COM_SEND_STATE 	= 3,

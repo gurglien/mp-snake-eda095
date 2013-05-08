@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import client.ClientMonitor.GameState;
 import client.Player.Move;
 
+//USED FOR TESTING PURPOSES
+
 public class PseudoServer extends Thread{
 	private ClientMonitor monitor;
 	private Player p1;

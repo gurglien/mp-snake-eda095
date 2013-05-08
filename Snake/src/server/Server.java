@@ -8,44 +8,30 @@ import client.Position;
 
 import common.MessageHandler;
 
-public class Server {
-
-	public static void main(String[] args) {
-
-
-		ServerSocket serverSocket;
-		try {
-			serverSocket = new ServerSocket(30000);
-			String message = "";
-			Position pos;
-			int code;
-			ServerMonitor servMon = new ServerMonitor();
-			int width = 99;
-			
-			
-			ServerLoop game = new ServerLoop(servMon, width);
-			Socket socket1 = serverSocket.accept();
-			Socket socket2 = serverSocket.accept();
-			//vänta på inkommande connections - starta trådar
-			
-			//skapa två messagehandlers eller ska messagehandler innehålla lista på sockets?
-//			MessageHandler mh = new MessageHandler(socket);
-			
-			game.start();
-			
-			
-			//skapa trådar för: 
-				//en tråd för att skicka state till client?
-			//hur slumpa fram käk?
-			
+public class Server extends Thread{
+	private int width;
+	private int port;
+	private ServerMonitor monitor;
 	
+	public Server(ServerMonitor monitor, int width, int port){
+		this.width = width;
+		this.port = port;
+		this.monitor = monitor;
+	}
+	
+	public void run() {
+		try {
+			ServerSocket serverSocket = new ServerSocket(port);
 			
+			ServerLoop game = new ServerLoop(monitor, width);
+			game.start();	
 			
+			Socket s = serverSocket.accept();
+			ServerSender ss = new ServerSender(1, monitor, s);
+			ss.start();
 			
-			
-			
-			
-			
+			ServerReceiver sr = new ServerReceiver(1, monitor, s);
+			sr.start();		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
