@@ -26,17 +26,13 @@ public class ServerLoop extends Thread {
 
 	public void run(){
 		try {
-			servMon.getState(); // Needed to postpone timer start until server is ready
+			while(servMon.getState() != GameState.PLAY); // Needed to postpone timer start until server is ready
 			long loopStart = System.currentTimeMillis();
 			
 			while (servMon.getState() == GameState.PLAY) {
 				Move[] moves = servMon.getNextMoves();
 				p1.move(moves[0]);
 				p2.move(moves[1]);
-				servMon.putCurrentMoves(moves);
-				if(checkCollisions()){
-					break;					
-				}
 				
 				checkFood();
 				if(food == null){
@@ -44,6 +40,11 @@ public class ServerLoop extends Thread {
 					servMon.putFood(food);
 				}
 				
+				servMon.putCurrentMoves(moves);
+				if(checkCollisions()){
+					break;					
+				}
+
 				loopStart += 300; // Update every 300 ms (this will determine the speed of the game)
 				long diff = loopStart - System.currentTimeMillis();
 				if(diff > 0) sleep(diff);

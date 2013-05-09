@@ -14,6 +14,7 @@ public class ServerSender extends Thread{
 	private MessageHandler mh;
 	private ServerMonitor monitor;
 	private Socket socket;
+	private GameState prevState;
 
 	public ServerSender(int player, ServerMonitor monitor, Socket socket) throws IllegalArgumentException{
 		if(player < 1 || player > 2){
@@ -28,12 +29,31 @@ public class ServerSender extends Thread{
 
 	public void run(){		
 		while(socket.isConnected()){
-			sendFoodPos();
-			sendCurrenOpponentMove();
-			sendShouldGrow();
+			try {
+				GameState state = monitor.getState();
+				if(state != prevState){
+					prevState = state;
+					sendGameState(state);
+				}
+				if(state == GameState.PLAY){
+					sendFoodPos();
+					sendCurrenOpponentMove();
+					sendShouldGrow();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
+	private void sendGameState(GameState state){
+		switch(state){
+		case PLAY : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.PLAY);
+		break;
+		}
+	}
+
 	// Get both players' moves and send to client
 	private void sendCurrenOpponentMove(){
 		try {
@@ -53,7 +73,7 @@ public class ServerSender extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void sendShouldGrow(){
 		if(monitor.getShouldGrow(player)){
 			mh.sendCode(Protocol.COM_SHOULD_GROW);
@@ -64,7 +84,7 @@ public class ServerSender extends Thread{
 			mh.sendCode(Protocol.ID_OPPONENT);
 		}
 	}
-	
+
 	private void sendFoodPos(){
 		if(monitor.foodChanged()){
 			mh.sendCode(Protocol.COM_FOOD);

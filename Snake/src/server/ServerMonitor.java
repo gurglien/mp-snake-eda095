@@ -12,6 +12,7 @@ public class ServerMonitor {
 	private Move[] currentMoves;
 	private boolean[] shouldGrow;
 	private GameState gameState;
+	private GameState[] clientStates = {GameState.NOT_READY, GameState.READY}; // TEMP READY
 	private boolean movesChecked;
 	private boolean serverReady;
 	private boolean foodChanged = false;
@@ -21,7 +22,7 @@ public class ServerMonitor {
 		nextMoves = new Move[2];
 		currentMoves = new Move[2];
 		shouldGrow = new boolean[2];
-		gameState = GameState.WAIT;
+		gameState = GameState.NOT_READY;
 		movesChecked = false;
 		serverReady = false;
 		
@@ -34,8 +35,8 @@ public class ServerMonitor {
 	
 	
 	/** MOVE METHODS */
-	public synchronized void putNextMove(int player, Move move){
-		nextMoves[player - 1] = move;
+	public synchronized void putNextMove(int playerId, Move move){
+		nextMoves[playerId - 1] = move;
 	}
 	
 	public synchronized Move[] getNextMoves(){
@@ -57,6 +58,13 @@ public class ServerMonitor {
 	}
 	
 	/** STATE METHODS */
+	public synchronized void setClientState(int playerId, GameState state){
+		clientStates[playerId - 1] = state;
+		if(clientStates[0] == GameState.READY && clientStates[1] == GameState.READY){
+			setState(GameState.PLAY);
+		}
+	}
+	
 	public synchronized void setState(GameState state){
 		if(state == GameState.PLAY) {
 			serverReady = true;
@@ -87,13 +95,13 @@ public class ServerMonitor {
 		return food;
 	}
 	
-	public synchronized void setShouldGrow(int player){
-		shouldGrow[player - 1] = true;
+	public synchronized void setShouldGrow(int playerId){
+		shouldGrow[playerId - 1] = true;
 	}
 	
-	public synchronized boolean getShouldGrow(int player){
-		if(shouldGrow[player - 1]) {
-			shouldGrow[player - 1] = false;
+	public synchronized boolean getShouldGrow(int playerId){
+		if(shouldGrow[playerId - 1]) {
+			shouldGrow[playerId - 1] = false;
 			return true;
 		} else {
 			return false;

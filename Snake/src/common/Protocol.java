@@ -13,8 +13,15 @@ public class Protocol {
 	
 	COM_FOOD = 36,
 	
-	ID_PLAYER = 39,
-	ID_OPPONENT = 40,
+	ID_PLAYER = 37,
+	ID_OPPONENT = 38,
 	
-	READY = 99;
+	COM_STATE = 39,
+	PLAY = 40,
+	WIN = 41,
+	LOSE = 42,
+	DRAW = 43,
+	READY = 44,
+	NOT_READY = 45,
+	CLOSE = 46;
 }

@@ -36,7 +36,12 @@ public class ClientGameLoop extends Thread{
 		Player p2 = new Player(2, width);
 		
 		try {
-			monitor.getState(); // Needed to postpone timer start until server is ready
+			// While loop needed to postpone timer start until server is ready
+			GameState state = monitor.getState();
+			while(state != GameState.PLAY){
+				state = monitor.getState();
+				panel.updateGameState(state);
+			}
 			long loopStart = System.currentTimeMillis();
 			
 			while(monitor.getState() == GameState.PLAY){
@@ -59,11 +64,6 @@ public class ClientGameLoop extends Thread{
 			e.printStackTrace();
 		}
 
-		// TEMP - print Win/Lose/Draw
-		try {
-			System.out.println(monitor.getState());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		System.out.println(monitor.getState());
 	}
 }

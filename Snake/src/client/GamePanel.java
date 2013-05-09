@@ -18,13 +18,21 @@ public class GamePanel extends JPanel{
 	private LinkedList<Position> snake2 = null;
 	private Position food = null;
 	private int width;
+	private ClientMonitor monitor;
+	private GameState currentState = GameState.NOT_READY;
 
-	public GamePanel(final ClientMonitor m, int playfieldWidth){
+	public GamePanel(final ClientMonitor monitor, int playfieldWidth){
 		width = playfieldWidth*10;
 		setBackground(Color.black);
-		addKeyListener(new InputHandler(m));
+		this.monitor = monitor;
+		addKeyListener(new InputHandler(monitor));
 		setIgnoreRepaint(true);
 		setFocusable(true);
+	}
+	
+	public void updateGameState(GameState s){
+		currentState = s;
+		repaint();
 	}
 
 	public void updatePositions(LinkedList<Position> s1, LinkedList<Position> s2, Position f){
@@ -35,11 +43,11 @@ public class GamePanel extends JPanel{
 	}
 
 	public void paint(Graphics g){
-		if(snake1 != null && snake2 != null){
-			//super.paint(g);
-			g.setColor(Color.black);
-			g.fillRect(0, 0, width, width);
-
+		//super.paint(g);
+		g.setColor(Color.black);
+		g.fillRect(0, 0, width, width);
+		
+		if(currentState == GameState.PLAY && snake1 != null && snake2 != null){
 			// Paint heads
 			g.setColor(Color.green);
 			g.fillOval(snake1.getFirst().x*10, snake1.getFirst().y*10, 10, 10);
@@ -60,11 +68,21 @@ public class GamePanel extends JPanel{
 			g.fillOval(food.x*10, food.y*10, 10, 10);
 
 			g.dispose();
-		}else{
-			g.setColor(Color.black);
-			g.fillRect(0, 0, width, width);
+		}else if (currentState != GameState.PLAY){
+			String text = "";
+			switch(currentState){
+			case WIN : text = "You win!";
+			break;
+			case LOSE : text = "You lose!";
+			break;
+			case DRAW : text = "Draw!";
+			break;
+			case READY : text = "Waiting for other player to become ready.";
+			break;
+			case NOT_READY : text = "Press SPACE when you are ready.";
+			}
 			g.setColor(Color.white);
-			g.drawString("TEMP: Press SPACE to play.", 100, 100);
+			g.drawString(text, width/4, width/2);
 			g.dispose();
 		}
 	}
@@ -91,7 +109,7 @@ public class GamePanel extends JPanel{
 			case KeyEvent.VK_SPACE : 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						monitor.setState(GameState.PLAY);
+						monitor.setState(GameState.READY);
 					}
 				});
 				break;

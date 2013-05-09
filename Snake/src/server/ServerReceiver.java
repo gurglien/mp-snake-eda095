@@ -25,25 +25,12 @@ public class ServerReceiver extends Thread{
 	}
 
 	public void run(){
-		try{
-			// Wait for ready (Måste ändras senare)
-			int rdy = mh.recieveCode();
-			while(rdy != Protocol.READY){
-				// Tillfällig felkontroll
-				System.out.println("Server: Received something other than READY.");
-				rdy = mh.recieveCode();
-			}
-			if(rdy == Protocol.READY){
-				monitor.setState(GameState.PLAY);
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-
 		while(socket.isConnected()){
 			int com = mh.recieveCode();
 			switch(com){
 			case Protocol.COM_MOVE : recvNextMove();
+			break;
+			case Protocol.COM_STATE : recvClientState();
 			break;
 			}
 		}
@@ -51,8 +38,8 @@ public class ServerReceiver extends Thread{
 
 	// Receive one player's next move 
 	private void recvNextMove(){
-		int m1 = mh.recieveCode();
-		switch(m1){
+		int m = mh.recieveCode();
+		switch(m){
 		case Protocol.LEFT : monitor.putNextMove(player, Move.LEFT);
 		break;
 		case Protocol.RIGHT : monitor.putNextMove(player, Move.RIGHT);
@@ -60,6 +47,14 @@ public class ServerReceiver extends Thread{
 		case Protocol.UP : monitor.putNextMove(player, Move.UP);
 		break;
 		case Protocol.DOWN : monitor.putNextMove(player, Move.DOWN);
+		break;
+		}
+	}
+	
+	private void recvClientState(){
+		int s = mh.recieveCode();
+		switch(s){
+		case Protocol.READY : monitor.setClientState(player, GameState.READY);
 		break;
 		}
 	}

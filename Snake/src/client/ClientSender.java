@@ -12,6 +12,7 @@ public class ClientSender extends Thread{
 	private Socket socket;
 	private ClientMonitor monitor;
 	private MessageHandler mh;
+	private GameState prevState;
 
 	public ClientSender(ClientMonitor monitor, Socket socket){
 		this.monitor = monitor;
@@ -20,21 +21,30 @@ public class ClientSender extends Thread{
 	}
 
 	public void run(){
-		try{
-			// Wait for ready (Måste ändras senare)
-			GameState rdy = monitor.getState();
-			if(rdy == GameState.PLAY){
-				mh.sendCode(Protocol.READY);
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 		while(socket.isConnected()){
-			// Send local player's next move to server
-			sendNextMove();
+			GameState state = monitor.getState();
+			if(state != prevState){
+				prevState = state;
+				sendGameState(state);
+			}
+			if(state == GameState.PLAY){
+				sendNextMove();
+			}
 		}
 	}
 
+	private void sendGameState(GameState state){
+		switch(state){
+		case READY : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.READY);
+		break;
+		case CLOSE : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.CLOSE);
+		break;
+		}
+	}
+
+	// Send local player's next move to server
 	private void sendNextMove(){
 		try {
 			Move nextMove = monitor.getNextMove();

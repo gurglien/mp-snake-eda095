@@ -29,6 +29,8 @@ public class ClientReceiver extends Thread{
 			break;
 			case Protocol.COM_FOOD : recvFoodPos();
 			break;
+			case Protocol.COM_STATE : recvGameState();
+			break;
 			}
 		}
 	}
@@ -69,6 +71,14 @@ public class ClientReceiver extends Thread{
 			monitor.putFood(food);
 		} catch (ConnectException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void recvGameState(){
+		int s = mh.recieveCode();
+		switch(s){
+		case Protocol.PLAY : monitor.setState(GameState.PLAY);
+		break;
 		}
 	}
 

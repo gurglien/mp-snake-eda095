@@ -6,11 +6,11 @@ import client.Player.Move;
 
 
 public class ClientMonitor {
-	public static enum GameState{PLAY, WIN, LOSE, DRAW, WAIT, CLOSE};
+	public static enum GameState{PLAY, WIN, LOSE, DRAW, READY, NOT_READY, CLOSE};
 	private Move nextMove;
 	private Move[] currentMoves = new Move[2];
 	private boolean[] shouldGrow = {false, false};
-	private GameState gameState = GameState.WAIT;
+	private GameState gameState = GameState.NOT_READY;
 	private boolean moveChecked = false;
 	private boolean moveChanged = false;
 	private boolean serverReady = false;
@@ -25,7 +25,6 @@ public class ClientMonitor {
 	 * @throws InterruptedException */
 	// Used by the inputhandler
 	public synchronized void putNextMove(Move move) throws InterruptedException{
-		while(!serverReady) wait();
 		nextMove = move;
 		moveChanged = true;
 		notifyAll();
@@ -57,13 +56,10 @@ public class ClientMonitor {
 	
 	/** STATE METHODS */
 	public synchronized void setState(GameState state){
-		if(state == GameState.PLAY) serverReady = true;
 		gameState = state;
-		notifyAll();
 	}
 	
-	public synchronized GameState getState() throws InterruptedException{
-		while(!serverReady) wait();
+	public synchronized GameState getState(){
 		return gameState;
 	}
 	
