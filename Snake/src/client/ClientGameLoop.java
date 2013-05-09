@@ -34,9 +34,6 @@ public class ClientGameLoop extends Thread{
 	public void run() {
 		Player p1 = new Player(1, width);
 		Player p2 = new Player(2, width);
-		// -TEMP--- Just to avoid nullpointerexc before the food transfer from server is implemented
-//		monitor.putFood(new Position(width/3, width/2));
-		// --------
 		
 		try {
 			monitor.getState(); // Needed to postpone timer start until server is ready

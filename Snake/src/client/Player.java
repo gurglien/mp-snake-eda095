@@ -81,14 +81,14 @@ public class Player {
 
 		// Collision with enemy
 		for(Position p : enemySnake){
-			if(head.x == p.x && head.y == p.y){
+			if(head.equals(p)){
 				return true;
 			}
 		}
 		
 		// Collision with self
 		for(int i = 1; i < snake.size(); ++i){
-			if(head.x == snake.get(i).x && head.y == snake.get(i).y){
+			if(head.equals(snake.get(i))){
 				return true;
 			}
 		}

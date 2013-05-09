@@ -1,6 +1,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import client.*;
 import client.ClientMonitor.GameState;
@@ -12,18 +13,18 @@ public class ServerLoop extends Thread {
 	private Player p2;
 	private int width;
 	private Position food;
+	private Random rand = new Random(System.currentTimeMillis());
 
 	public ServerLoop(ServerMonitor servMon, int width){
 		this.servMon = servMon;
 		this.width = width;
+		p1 = new Player(1, width);
+		p2 = new Player(2, width);
 		newFood();
 		servMon.putFood(food);
 	}
 
 	public void run(){
-		p1 = new Player(1, width);
-		p2 = new Player(2, width);
-		
 		try {
 			servMon.getState(); // Needed to postpone timer start until server is ready
 			long loopStart = System.currentTimeMillis();
@@ -84,10 +85,10 @@ public class ServerLoop extends Thread {
 	private void checkFood(){
 		Position head1 = p1.getSnake().getFirst();
 		Position head2 = p2.getSnake().getFirst();
-		if(head1.x == food.x && head1.y == food.y){
+		if(head1.equals(food)){
 			servMon.setShouldGrow(1);
 			food = null;
-		}else if(head2.x == food.x && head2.y == food.y){
+		}else if(head2.equals(food)){
 			servMon.setShouldGrow(2);
 			food = null;
 		}
@@ -95,7 +96,21 @@ public class ServerLoop extends Thread {
 
 	// TODO This should place new food at random and free positions
 	private void newFood(){
-		food = new Position(width/3, width/2);
+		int x = rand.nextInt(width);
+		int y = rand.nextInt(width);
+		Position f = new Position(x, y);
+		for(Position p : p1.getSnake()){
+			if(f.equals(p)){
+				newFood();
+			}
+		}
+		for(Position p : p2.getSnake()){
+			if(f.equals(p)){
+				newFood();
+			}
+		}
+		food = f;
+//		food = new Position(width/3, width/2);
 	}
 
 

@@ -29,5 +29,13 @@ public class Position {
 		}
 		return res;
 	}
+	
+	public boolean equals(Position p){
+		if(x == p.x && y == p.y){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 }
