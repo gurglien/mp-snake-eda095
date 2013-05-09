@@ -14,10 +14,11 @@ public class ClientMonitor {
 	private boolean moveChecked = false;
 	private boolean moveChanged = false;
 	private boolean serverReady = false;
-	private ArrayList<Position> food = new ArrayList<Position>();
+	private Position food;
 	
 	public ClientMonitor(){
 		nextMove = Move.RIGHT;
+		currentMoves[0] = nextMove;
 	}
 	
 	/** MOVE METHODS 
@@ -34,15 +35,16 @@ public class ClientMonitor {
 	public synchronized Move getNextMove() throws InterruptedException{
 		while(!moveChanged) wait();
 		moveChanged = false;
+		currentMoves[0] = nextMove;
 		return nextMove;
 	}
 	
 	// Used in the server game loop
-	public synchronized void putCurrentMoves(Move[] moves) throws InterruptedException{
+	public synchronized void putCurrentOpponentMove(Move move) throws InterruptedException{
 		while(moveChecked) wait();
 		moveChecked = true;
 		notifyAll();
-		currentMoves = moves.clone();
+		currentMoves[1] = move;
 	}
 	
 	// Used in the client game loop
@@ -66,21 +68,21 @@ public class ClientMonitor {
 	}
 	
 	/** FOOD METHODS */
-	public synchronized void putFood(ArrayList<Position> f){
+	public synchronized void putFood(Position f){
 		food = f;
 	}
 	
-	public synchronized ArrayList<Position> getFood(){
+	public synchronized Position getFood(){
 		return food;
 	}
 	
-	public synchronized void setShouldGrow(int player){
-		shouldGrow[player - 1] = true;
+	public synchronized void setShouldGrow(int playerId){
+		shouldGrow[playerId - 1] = true;
 	}
 	
-	public synchronized boolean getShouldGrow(int player){
-		if(shouldGrow[player - 1]){
-			shouldGrow[player - 1] = false;
+	public synchronized boolean getShouldGrow(int playerId){
+		if(shouldGrow[playerId - 1]){
+			shouldGrow[playerId - 1] = false;
 			return true;
 		}else{
 			return false;

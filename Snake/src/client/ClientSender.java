@@ -38,14 +38,15 @@ public class ClientSender extends Thread{
 	private void sendNextMove(){
 		try {
 			Move nextMove = monitor.getNextMove();
+			mh.sendCode(Protocol.COM_MOVE);
 			switch(nextMove){
-			case LEFT : mh.sendCode(Protocol.TURN_LEFT);
+			case LEFT : mh.sendCode(Protocol.LEFT);
 			break;
-			case RIGHT : mh.sendCode(Protocol.TURN_RIGHT);
+			case RIGHT : mh.sendCode(Protocol.RIGHT);
 			break;
-			case UP : mh.sendCode(Protocol.TURN_UP);
+			case UP : mh.sendCode(Protocol.UP);
 			break;
-			case DOWN : mh.sendCode(Protocol.TURN_DOWN);
+			case DOWN : mh.sendCode(Protocol.DOWN);
 			break;
 			}
 		} catch (InterruptedException e) {

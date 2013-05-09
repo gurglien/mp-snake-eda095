@@ -16,7 +16,7 @@ import client.Player.Move;
 public class GamePanel extends JPanel{
 	private LinkedList<Position> snake1 = null;
 	private LinkedList<Position> snake2 = null;
-	private ArrayList<Position> food = null;
+	private Position food = null;
 	private int width;
 
 	public GamePanel(final ClientMonitor m, int playfieldWidth){
@@ -27,7 +27,7 @@ public class GamePanel extends JPanel{
 		setFocusable(true);
 	}
 
-	public void updatePositions(LinkedList<Position> s1, LinkedList<Position> s2, ArrayList<Position> f){
+	public void updatePositions(LinkedList<Position> s1, LinkedList<Position> s2, Position f){
 		snake1 = s1;
 		snake2 = s2;
 		food = f;
@@ -56,10 +56,8 @@ public class GamePanel extends JPanel{
 			}
 
 			// Paint food
-			g.setColor(Color.pink);
-			for(Position p : food){
-				g.fillOval(p.x*10, p.y*10, 10, 10);
-			}
+			g.setColor(Color.orange);
+			g.fillOval(food.x*10, food.y*10, 10, 10);
 
 			g.dispose();
 		}else{

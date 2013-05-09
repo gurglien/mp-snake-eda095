@@ -9,37 +9,28 @@ import java.net.UnknownHostException;
 
 public class Client extends Thread{
 	private int width;
-	private InetAddress host;
-	private int port;
+	private Socket socket;
+	private ClientMonitor monitor;
+	private ClientGameLoop game;
 	
-	public Client(int width, String host, int port){
+	public Client(ClientMonitor monitor, int width, Socket socket){
 		this.width = width;
-		try {
-			this.host = InetAddress.getByName(host);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		this.port = port;
+		this.socket = socket;
+		this.monitor = monitor;
+		game = new ClientGameLoop(monitor, width);
 	}
 	
-	public void run(){
-		try {
-			ClientMonitor monitor = new ClientMonitor();
-			Socket s = new Socket(host, port);
-			
-			ClientGameLoop game = new ClientGameLoop(monitor, width);
-			game.start();
-			
-			ClientSender cs = new ClientSender(monitor, s);
-			cs.start();
-			
-			ClientReceiver cr = new ClientReceiver(monitor, s);
-			cr.start();
-			
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void run(){		
+		game.start();
+		
+		ClientSender cs = new ClientSender(monitor, socket);
+		cs.start();
+		
+		ClientReceiver cr = new ClientReceiver(monitor, socket);
+		cr.start();
+	}
+	
+	public void setPanel(GamePanel panel){
+		game.setPanel(panel);
 	}
 }

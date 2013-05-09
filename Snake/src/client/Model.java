@@ -14,11 +14,12 @@ import server.ServerMonitor;
 import autodetect.ServerFinder;
 
 public class Model {
-	private ClientGameLoop game;
+//	private ClientGameLoop game;
 	private ClientMonitor clientMonitor;
 	private ServerMonitor serverMonitor;
 	private Server server;
 	private Socket socket;
+	private Client client;
 	/**
 	 * Retrives a matrix of the servers that are online currently.
 	 * @return 
@@ -57,19 +58,10 @@ public class Model {
 		server.start();
 		
 		try {
-			clientMonitor = new ClientMonitor();
 			socket = new Socket(host, port);
-			
-			game = new ClientGameLoop(clientMonitor, playfieldWidth);
-			
-			ClientSender cs = new ClientSender(clientMonitor, socket);
-			cs.start();
-			
-			ClientReceiver cr = new ClientReceiver(clientMonitor, socket);
-			cr.start();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			clientMonitor = new ClientMonitor();
+			client = new Client(clientMonitor, playfieldWidth, socket);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -82,12 +74,12 @@ public class Model {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		game = null;
+		client = null;
 		server = null;
 	}
 	
 	public void addGamePanel(GamePanel panel){
-		game.setPanel(panel);
+		client.setPanel(panel);
 	}
 	
 //	public void startServer(){
@@ -99,11 +91,10 @@ public class Model {
 //	}
 	
 	public void startInitiatedGame(){
-		if(server.equals(null) && game.equals(null)){
+		if(server.equals(null) && client.equals(null)){
 			//TODO game not yet initialised unsupported behaviuor.
 		}else{
-		
-		game.start();
+			client.start();
 		}
 	}
 	

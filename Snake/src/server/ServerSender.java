@@ -10,6 +10,7 @@ import java.net.*;
 
 public class ServerSender extends Thread{
 	private int player;
+	private int opponent;
 	private MessageHandler mh;
 	private ServerMonitor monitor;
 	private Socket socket;
@@ -22,42 +23,52 @@ public class ServerSender extends Thread{
 		this.monitor = monitor;
 		this.socket = socket;
 		mh = new MessageHandler(socket);
+		opponent = (player == 1) ? 2 : 1;
 	}
 
 	public void run(){		
 		while(socket.isConnected()){
-			// Get both players' moves and send to client
-			sendCurrentMoves();
+			sendFoodPos();
+			sendCurrenOpponentMove();
+			sendShouldGrow();
 		}
 	}
 	
-	private void sendCurrentMoves(){
+	// Get both players' moves and send to client
+	private void sendCurrenOpponentMove(){
 		try {
 			Move[] moves = monitor.getCurrentMoves();
-			switch(moves[0]){ // Remember to change, must depend on player variable
-			case LEFT : mh.sendCode(Protocol.TURN_LEFT);
-			break;
-			case RIGHT : mh.sendCode(Protocol.TURN_RIGHT);
-			break;
-			case UP : mh.sendCode(Protocol.TURN_UP);
-			break;
-			case DOWN : mh.sendCode(Protocol.TURN_DOWN);
-			break;
-			}
-			
+			mh.sendCode(Protocol.COM_MOVE);
 			switch(moves[1]){ // Remember to change, must depend on player variable
-			case LEFT : mh.sendCode(Protocol.TURN_LEFT);
+			case LEFT : mh.sendCode(Protocol.LEFT);
 			break;
-			case RIGHT : mh.sendCode(Protocol.TURN_RIGHT);
+			case RIGHT : mh.sendCode(Protocol.RIGHT);
 			break;
-			case UP : mh.sendCode(Protocol.TURN_UP);
+			case UP : mh.sendCode(Protocol.UP);
 			break;
-			case DOWN : mh.sendCode(Protocol.TURN_DOWN);
+			case DOWN : mh.sendCode(Protocol.DOWN);
 			break;
 			}
-			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void sendShouldGrow(){
+		if(monitor.getShouldGrow(player)){
+			mh.sendCode(Protocol.COM_SHOULD_GROW);
+			mh.sendCode(Protocol.ID_PLAYER);
+		}
+		if(monitor.getShouldGrow(opponent)){
+			mh.sendCode(Protocol.COM_SHOULD_GROW);
+			mh.sendCode(Protocol.ID_OPPONENT);
+		}
+	}
+	
+	private void sendFoodPos(){
+		if(monitor.foodChanged()){
+			mh.sendCode(Protocol.COM_FOOD);
+			mh.sendPosition(monitor.getFood());
 		}
 	}
 }

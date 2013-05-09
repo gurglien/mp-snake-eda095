@@ -11,20 +11,18 @@ public class ServerLoop extends Thread {
 	private Player p1;
 	private Player p2;
 	private int width;
-	private ArrayList<Position> food;
+	private Position food;
 
 	public ServerLoop(ServerMonitor servMon, int width){
-		food = new ArrayList<Position>();
 		this.servMon = servMon;
 		this.width = width;
+		newFood();
+		servMon.putFood(food);
 	}
 
 	public void run(){
 		p1 = new Player(1, width);
 		p2 = new Player(2, width);
-		
-		newFood();
-		servMon.putFood(food);
 		
 		try {
 			servMon.getState(); // Needed to postpone timer start until server is ready
@@ -39,9 +37,8 @@ public class ServerLoop extends Thread {
 					break;					
 				}
 				
-				int nbrOfFood = food.size();
 				checkFood();
-				if(nbrOfFood != food.size()){
+				if(food == null){
 					newFood();
 					servMon.putFood(food);
 				}
@@ -87,23 +84,18 @@ public class ServerLoop extends Thread {
 	private void checkFood(){
 		Position head1 = p1.getSnake().getFirst();
 		Position head2 = p2.getSnake().getFirst();
-		for(int i = 0; i < food.size(); ++i){
-			if(head1.x == food.get(i).x && head1.y == food.get(i).y){
-				servMon.setShouldGrow(1);
-				food.remove(i);
-			}
-		}
-		for(int i = 0; i < food.size(); ++i){
-			if(head2.x == food.get(i).x && head2.y == food.get(i).y){
-				servMon.setShouldGrow(2);
-				food.remove(i);
-			}
+		if(head1.x == food.x && head1.y == food.y){
+			servMon.setShouldGrow(1);
+			food = null;
+		}else if(head2.x == food.x && head2.y == food.y){
+			servMon.setShouldGrow(2);
+			food = null;
 		}
 	}
 
 	// TODO This should place new food at random and free positions
 	private void newFood(){
-		food.add(new Position(width/3, width/2));
+		food = new Position(width/3, width/2);
 	}
 
 

@@ -14,7 +14,8 @@ public class ServerMonitor {
 	private GameState gameState;
 	private boolean movesChecked;
 	private boolean serverReady;
-	private ArrayList<Position> food;
+	private boolean foodChanged = false;
+	private Position food;
 	
 	public ServerMonitor(){
 		nextMoves = new Move[2];
@@ -23,7 +24,6 @@ public class ServerMonitor {
 		gameState = GameState.WAIT;
 		movesChecked = false;
 		serverReady = false;
-		food = new ArrayList<Position>();
 		
 		nextMoves[0] = Move.RIGHT;
 		nextMoves[1] = Move.LEFT;
@@ -73,11 +73,17 @@ public class ServerMonitor {
 	}
 	
 	/** FOOD METHODS */
-	public synchronized void putFood(ArrayList<Position> f){
-		food = f;
+	public synchronized boolean foodChanged(){
+		return foodChanged;
 	}
 	
-	public synchronized ArrayList<Position> getFood(){
+	public synchronized void putFood(Position f){
+		food = f;
+		foodChanged = true;
+	}
+	
+	public synchronized Position getFood(){
+		foodChanged = false;
 		return food;
 	}
 	

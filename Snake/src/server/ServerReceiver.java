@@ -41,21 +41,25 @@ public class ServerReceiver extends Thread{
 		}
 
 		while(socket.isConnected()){
-			// Receive one player's next move 
-			recvNextMove();
+			int com = mh.recieveCode();
+			switch(com){
+			case Protocol.COM_MOVE : recvNextMove();
+			break;
+			}
 		}
 	}
 
+	// Receive one player's next move 
 	private void recvNextMove(){
 		int m1 = mh.recieveCode();
 		switch(m1){
-		case Protocol.TURN_LEFT : monitor.putNextMove(player, Move.LEFT);
+		case Protocol.LEFT : monitor.putNextMove(player, Move.LEFT);
 		break;
-		case Protocol.TURN_RIGHT : monitor.putNextMove(player, Move.RIGHT);
+		case Protocol.RIGHT : monitor.putNextMove(player, Move.RIGHT);
 		break;
-		case Protocol.TURN_UP : monitor.putNextMove(player, Move.UP);
+		case Protocol.UP : monitor.putNextMove(player, Move.UP);
 		break;
-		case Protocol.TURN_DOWN : monitor.putNextMove(player, Move.DOWN);
+		case Protocol.DOWN : monitor.putNextMove(player, Move.DOWN);
 		break;
 		}
 	}
