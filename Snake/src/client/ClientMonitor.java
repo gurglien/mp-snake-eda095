@@ -15,38 +15,54 @@ public class ClientMonitor {
 	private boolean moveChanged = false;
 	private boolean serverReady = false;
 	private Position food;
+	private int player;
+	private int opponent;
 	
 	public ClientMonitor(){
-		nextMove = Move.RIGHT;
-		currentMoves[0] = nextMove;
+		
+	}
+	
+	public synchronized void initialize(int playerId) throws IllegalArgumentException{
+		if(playerId == 1){
+			nextMove = Move.RIGHT;
+			player = 0;
+			opponent = 1;
+		}else if(playerId == 2){
+			nextMove = Move.LEFT;
+			player = 1;
+			opponent = 0;
+		}else{
+			throw new IllegalArgumentException("Only player 1 or 2 allowed.");
+		}
+		currentMoves[player] = nextMove;
 	}
 	
 	/** MOVE METHODS 
 	 * @throws InterruptedException */
-	// Used by the inputhandler
+	// Used by InputHandler
 	public synchronized void putNextMove(Move move) throws InterruptedException{
 		nextMove = move;
 		moveChanged = true;
 		notifyAll();
 	}
 	
-	// Used in the server game loop
+	// Used by ClientSender
 	public synchronized Move getNextMove() throws InterruptedException{
 		while(!moveChanged) wait();
 		moveChanged = false;
-		currentMoves[0] = nextMove;
+		currentMoves[player] = nextMove;
 		return nextMove;
 	}
 	
-	// Used in the server game loop
+	// Used by ClientReceiver
 	public synchronized void putCurrentOpponentMove(Move move) throws InterruptedException{
 		while(moveChecked) wait();
 		moveChecked = true;
 		notifyAll();
-		currentMoves[1] = move;
+		currentMoves[opponent] = move;
 	}
 	
-	// Used in the client game loop
+	// Used by ClientGameLoop
 	public synchronized Move[] getCurrentMoves() throws InterruptedException{
 		while(!moveChecked)	wait();
 		moveChecked = false;

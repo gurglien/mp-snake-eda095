@@ -43,7 +43,7 @@ public class Model {
 	 * @param serverPort
 	 */
 	public void initiateNewGame(String serverName, String serverPort) {
-		int playfieldWidth = 50;
+		int playfieldWidth = 60;
 		int port = 0;
 		if(serverPort.equals("")){
 			System.err.println("Error: You need to specify a port number");

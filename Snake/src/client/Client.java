@@ -1,23 +1,19 @@
 package client;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-//USED FOR TESTING PURPOSES
 
 public class Client extends Thread{
-	private int width;
 	private Socket socket;
 	private ClientMonitor monitor;
 	private ClientGameLoop game;
+	private ClientReceiver cr;
 	
 	public Client(ClientMonitor monitor, int width, Socket socket){
-		this.width = width;
 		this.socket = socket;
 		this.monitor = monitor;
 		game = new ClientGameLoop(monitor, width);
+		cr = new ClientReceiver(monitor, socket);
 	}
 	
 	public void run(){		
@@ -26,11 +22,11 @@ public class Client extends Thread{
 		ClientSender cs = new ClientSender(monitor, socket);
 		cs.start();
 		
-		ClientReceiver cr = new ClientReceiver(monitor, socket);
 		cr.start();
 	}
 	
 	public void setPanel(GamePanel panel){
 		game.setPanel(panel);
+		cr.setPanel(panel);
 	}
 }

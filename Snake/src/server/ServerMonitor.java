@@ -12,7 +12,7 @@ public class ServerMonitor {
 	private Move[] currentMoves;
 	private boolean[] shouldGrow;
 	private GameState gameState;
-	private GameState[] clientStates = {GameState.NOT_READY, GameState.READY}; // TEMP READY
+	private GameState[] clientStates = {GameState.NOT_READY, GameState.NOT_READY};
 	private boolean movesChecked;
 	private boolean serverReady;
 	private boolean foodChanged = false;

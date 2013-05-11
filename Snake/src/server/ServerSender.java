@@ -32,7 +32,6 @@ public class ServerSender extends Thread{
 			try {
 				GameState state = monitor.getState();
 				if(state != prevState){
-					prevState = state;
 					sendGameState(state);
 				}
 				if(state == GameState.PLAY){
@@ -40,6 +39,7 @@ public class ServerSender extends Thread{
 					sendCurrenOpponentMove();
 					sendShouldGrow();
 				}
+				prevState = state;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -50,6 +50,20 @@ public class ServerSender extends Thread{
 		switch(state){
 		case PLAY : mh.sendCode(Protocol.COM_STATE);
 		mh.sendCode(Protocol.PLAY);
+		if(player == 1){
+			mh.sendCode(Protocol.ID_PLAYER);
+		}else{
+			mh.sendCode(Protocol.ID_OPPONENT);
+		}
+		break;
+		case WIN : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.WIN);
+		break;
+		case LOSE : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.LOSE);
+		break;
+		case DRAW : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.DRAW);
 		break;
 		}
 	}

@@ -2,6 +2,7 @@ package client;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import client.ClientMonitor.GameState;
 import client.Player.Move;
@@ -32,21 +33,20 @@ public class ClientGameLoop extends Thread{
 	}
 
 	public void run() {
-		Player p1 = new Player(1, width);
-		Player p2 = new Player(2, width);
+		final Player p1 = new Player(1, width);
+		final Player p2 = new Player(2, width);
 		
 		try {
 			// While loop needed to postpone timer start until server is ready
-			GameState state = monitor.getState();
-			while(state != GameState.PLAY){
-				state = monitor.getState();
-				panel.updateGameState(state);
-			}
+			while(monitor.getState() != GameState.PLAY);
 			long loopStart = System.currentTimeMillis();
 			
 			while(monitor.getState() == GameState.PLAY){
 				try {
 					Move[] moves = monitor.getCurrentMoves();
+					if(moves == null){
+						continue;
+					}
 					p1.move(moves[0]);
 					p2.move(moves[1]);
 				} catch (Exception e) {
@@ -54,16 +54,19 @@ public class ClientGameLoop extends Thread{
 				}
 				if(monitor.getShouldGrow(1)) p1.grow();
 				if(monitor.getShouldGrow(2)) p2.grow();
-				panel.updatePositions(p1.getSnake(), p2.getSnake(), monitor.getFood());
-
-				loopStart += 150; // Update every 150 ms (this should be faster than ServerLoop)
+				
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						panel.updatePositions(p1.getSnake(), p2.getSnake(), monitor.getFood());
+					}
+				});
+				
+				loopStart += 100; // Update every 100 ms (this should be faster than ServerLoop)
 				long diff = loopStart - System.currentTimeMillis();
 				if(diff > 0) sleep(diff);
-			}
+			}	
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		System.out.println(monitor.getState());
 	}
 }

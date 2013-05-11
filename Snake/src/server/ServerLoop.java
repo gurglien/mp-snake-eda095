@@ -26,7 +26,8 @@ public class ServerLoop extends Thread {
 
 	public void run(){
 		try {
-			while(servMon.getState() != GameState.PLAY); // Needed to postpone timer start until server is ready
+			// While loop needed to postpone timer start until server is ready
+			while(servMon.getState() != GameState.PLAY);
 			long loopStart = System.currentTimeMillis();
 			
 			while (servMon.getState() == GameState.PLAY) {
@@ -45,7 +46,7 @@ public class ServerLoop extends Thread {
 					break;					
 				}
 
-				loopStart += 300; // Update every 300 ms (this will determine the speed of the game)
+				loopStart += 200; // Update every 200 ms (this will determine the speed of the game)
 				long diff = loopStart - System.currentTimeMillis();
 				if(diff > 0) sleep(diff);
 			}
@@ -95,7 +96,6 @@ public class ServerLoop extends Thread {
 		}
 	}
 
-	// TODO This should place new food at random and free positions
 	private void newFood(){
 		int x = rand.nextInt(width);
 		int y = rand.nextInt(width);
@@ -111,11 +111,5 @@ public class ServerLoop extends Thread {
 			}
 		}
 		food = f;
-//		food = new Position(width/3, width/2);
 	}
-
-
-
-
-
 }

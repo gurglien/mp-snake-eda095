@@ -7,13 +7,18 @@ import common.Protocol;
 
 import java.net.*;
 
+import javax.swing.SwingUtilities;
+
 public class ClientReceiver extends Thread{
 	public static final int DEFAULT_PORT = 30000;
 	private Socket socket;
 	private ClientMonitor monitor;
 	private MessageHandler mh;
+	private int player;
+	private int opponent;
+	private GamePanel panel;
 
-	public ClientReceiver(ClientMonitor monitor, Socket socket){
+	public ClientReceiver(ClientMonitor monitor, Socket socket) throws IllegalArgumentException{
 		this.monitor = monitor;
 		this.socket = socket;
 		mh = new MessageHandler(socket);
@@ -59,12 +64,12 @@ public class ClientReceiver extends Thread{
 	private void recvShouldGrow(){
 		int playerId = mh.recieveCode();
 		switch(playerId){
-		case Protocol.ID_PLAYER : monitor.setShouldGrow(1);
+		case Protocol.ID_PLAYER : monitor.setShouldGrow(player);
 		break;
-		case Protocol.ID_OPPONENT : monitor.setShouldGrow(2);
+		case Protocol.ID_OPPONENT : monitor.setShouldGrow(opponent);
 		}
 	}
-	
+
 	private void recvFoodPos(){
 		try {
 			Position food = mh.recievePosition();
@@ -73,13 +78,40 @@ public class ClientReceiver extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void recvGameState(){
 		int s = mh.recieveCode();
+		GameState state = null;
 		switch(s){
-		case Protocol.PLAY : monitor.setState(GameState.PLAY);
+		case Protocol.PLAY : state = GameState.PLAY;
+		int id = mh.recieveCode();
+		if(id == Protocol.ID_PLAYER){
+			player = 1;
+			opponent = 2;
+		}else{
+			player = 2;
+			opponent = 1;
+		}
+		monitor.initialize(player);
+		break;
+		case Protocol.WIN : state = GameState.WIN;
+		break;
+		case Protocol.LOSE : state = GameState.LOSE;
+		break;
+		case Protocol.DRAW : state = GameState.DRAW;
 		break;
 		}
+		final GameState finalState = state;
+		monitor.setState(finalState);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				panel.updateGameState(finalState);
+			}
+		});
+	}
+
+	public void setPanel(GamePanel panel){
+		this.panel = panel;
 	}
 
 }
