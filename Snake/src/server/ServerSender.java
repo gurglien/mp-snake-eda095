@@ -14,7 +14,7 @@ public class ServerSender extends Thread{
 	private MessageHandler mh;
 	private ServerMonitor monitor;
 	private Socket socket;
-	private GameState prevState;
+	private GameState prevState = GameState.NOT_READY;
 
 	public ServerSender(int player, ServerMonitor monitor, Socket socket) throws IllegalArgumentException{
 		if(player < 1 || player > 2){
@@ -30,7 +30,7 @@ public class ServerSender extends Thread{
 	public void run(){		
 		while(socket.isConnected()){
 			try {
-				GameState state = monitor.getState();
+				GameState state = monitor.getClientState(player);
 				if(state != prevState){
 					sendGameState(state);
 				}

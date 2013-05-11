@@ -27,10 +27,10 @@ public class ServerLoop extends Thread {
 	public void run(){
 		try {
 			// While loop needed to postpone timer start until server is ready
-			while(servMon.getState() != GameState.PLAY);
+			while(servMon.getClientState(1) != GameState.PLAY && servMon.getClientState(2) != GameState.PLAY);
 			long loopStart = System.currentTimeMillis();
 			
-			while (servMon.getState() == GameState.PLAY) {
+			while (servMon.getClientState(1) == GameState.PLAY && servMon.getClientState(2) == GameState.PLAY) {
 				Move[] moves = servMon.getNextMoves();
 				p1.move(moves[0]);
 				p2.move(moves[1]);
@@ -64,11 +64,13 @@ public class ServerLoop extends Thread {
 			return true;
 			// Player 1 collided
 		}else if(c1 && !c2){
-			servMon.setState(GameState.LOSE);
+			servMon.setClientState(1, GameState.LOSE);
+			servMon.setClientState(2, GameState.WIN);
 			return true;
 			// Player 2 collided
 		}else if(!c1 && c2){
-			servMon.setState(GameState.WIN);
+			servMon.setClientState(1, GameState.WIN);
+			servMon.setClientState(2, GameState.LOSE);
 			return true;
 		}
 		return false;
@@ -76,11 +78,14 @@ public class ServerLoop extends Thread {
 
 	private void longestSnakeWins(int snakeLength1, int snakeLength2){
 		if(snakeLength1 > snakeLength2){
-			servMon.setState(GameState.WIN);	
+			servMon.setClientState(1, GameState.WIN);
+			servMon.setClientState(2, GameState.LOSE);	
 		}else if(snakeLength1 < snakeLength2){
-			servMon.setState(GameState.LOSE);
+			servMon.setClientState(1, GameState.LOSE);
+			servMon.setClientState(2, GameState.WIN);
 		}else{
-			servMon.setState(GameState.DRAW);
+			servMon.setClientState(1, GameState.DRAW);
+			servMon.setClientState(2, GameState.DRAW);
 		}
 	}
 

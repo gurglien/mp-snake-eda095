@@ -68,7 +68,8 @@ public class Model {
 	
 	public void closeGame(){
 		clientMonitor.setState(GameState.CLOSE);
-		serverMonitor.setState(GameState.CLOSE);
+		serverMonitor.setClientState(1, GameState.CLOSE);
+		serverMonitor.setClientState(2, GameState.CLOSE);
 		try {
 			socket.close();
 		} catch (IOException e) {

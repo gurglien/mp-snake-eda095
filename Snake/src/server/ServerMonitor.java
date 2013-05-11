@@ -61,24 +61,34 @@ public class ServerMonitor {
 	public synchronized void setClientState(int playerId, GameState state){
 		clientStates[playerId - 1] = state;
 		if(clientStates[0] == GameState.READY && clientStates[1] == GameState.READY){
-			setState(GameState.PLAY);
-		}
-	}
-	
-	public synchronized void setState(GameState state){
-		if(state == GameState.PLAY) {
+			clientStates[0] = GameState.PLAY;
+			clientStates[1] = GameState.PLAY;
 			serverReady = true;
 		}
-		gameState = state;
 		notifyAll();
 	}
 	
-	public synchronized GameState getState() throws InterruptedException{
+	public synchronized GameState getClientState(int playerId) throws InterruptedException{
 		while(!serverReady) {
 			wait();
 		}
-		return gameState;
+		return clientStates[playerId - 1];
 	}
+	
+//	public synchronized void setState(GameState state){
+//		if(state == GameState.PLAY) {
+//			serverReady = true;
+//		}
+//		gameState = state;
+//		notifyAll();
+//	}
+	
+//	public synchronized GameState getState() throws InterruptedException{
+//		while(!serverReady) {
+//			wait();
+//		}
+//		return gameState;
+//	}
 	
 	/** FOOD METHODS */
 	public synchronized boolean foodChanged(){
