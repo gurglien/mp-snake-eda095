@@ -42,7 +42,7 @@ public class Model {
 	 * @param serverName
 	 * @param serverPort
 	 */
-	public void initiateNewGame(String serverName, String serverPort) {
+	public void initiateNewGame(String serverPort) {
 		int playfieldWidth = 60;
 		int port = 0;
 		if(serverPort.equals("")){
@@ -108,7 +108,7 @@ public class Model {
 	 * @param server
 	 */
 	public void connectToServer(Object[] server) {
-		
+		//TODO Juri do some magics!
 	}
 
 }

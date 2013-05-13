@@ -26,11 +26,9 @@ public class GUI extends JFrame{
 
 //TextFields
 
-	private JTextField ipField;
-	private JTextField manualServerPort;
-	private JTextField playerNameField;
-	private JTextField serverNameField;
-	private JTextField serverPortField;;
+	private JTextField serverIpField;
+	private JTextField serverPort;
+	private JTextField createPortField;;
 
 
 //Tables
@@ -91,37 +89,31 @@ public class GUI extends JFrame{
 		JPanel settingsPanel = new JPanel();
 		tabbedPane.addTab("Settings", null, settingsPanel, null);
 		settingsPanel.setLayout(null);
-		
-		JLabel lblPlayerName = new JLabel("Player Name:");
-		lblPlayerName.setBounds(50, 72, 97, 16);
-		settingsPanel.add(lblPlayerName);
-		
-		playerNameField = new JTextField();
-		playerNameField.setBounds(50, 100, 134, 28);
-		settingsPanel.add(playerNameField);
-		playerNameField.setColumns(10);
-		
-		JLabel lblServerName = new JLabel("Server Name:");
-		lblServerName.setBounds(50, 140, 97, 16);
-		settingsPanel.add(lblServerName);
-		
-		serverNameField = new JTextField();
-		serverNameField.setBounds(50, 168, 134, 28);
-		settingsPanel.add(serverNameField);
-		serverNameField.setColumns(10);
-		
+				
 		btnNewGame = new JButton("New Game");
-		btnNewGame.setBounds(66, 386, 117, 29);
+		btnNewGame.setBounds(60, 125, 117, 29);
 		settingsPanel.add(btnNewGame);
 		
 		JLabel lblPort = new JLabel("Port:");
-		lblPort.setBounds(50, 208, 61, 16);
+		lblPort.setBounds(50, 57, 61, 16);
 		settingsPanel.add(lblPort);
 		
-		serverPortField = new JTextField();
-		serverPortField.setBounds(50, 236, 134, 28);
-		settingsPanel.add(serverPortField);
-		serverPortField.setColumns(10);
+		createPortField = new JTextField();
+		createPortField.setBounds(50, 85, 134, 28);
+		settingsPanel.add(createPortField);
+		createPortField.setColumns(10);
+		
+		JLabel lblWelcomeToMpsnake = new JLabel("Welcome to MPSnake Pro!");
+		lblWelcomeToMpsnake.setBounds(340, 91, 196, 16);
+		settingsPanel.add(lblWelcomeToMpsnake);
+		
+		JLabel lblPleaseEnterA = new JLabel("Please enter a free port number");
+		lblPleaseEnterA.setBounds(327, 130, 295, 16);
+		settingsPanel.add(lblPleaseEnterA);
+		
+		JLabel lblToCreateA = new JLabel(" to create a multiplayer server!");
+		lblToCreateA.setBounds(327, 158, 196, 16);
+		settingsPanel.add(lblToCreateA);
 		
 		serverPanel = new JPanel();
 		tabbedPane.addTab("Servers", null, serverPanel, null);
@@ -139,21 +131,21 @@ public class GUI extends JFrame{
 		lblManualConnect.setBounds(436, 213, 117, 16);
 		serverPanel.add(lblManualConnect);
 		
-		ipField = new JTextField();
-		ipField.setBounds(436, 258, 134, 28);
-		serverPanel.add(ipField);
-		ipField.setColumns(10);
+		serverIpField = new JTextField();
+		serverIpField.setBounds(436, 258, 134, 28);
+		serverPanel.add(serverIpField);
+		serverIpField.setColumns(10);
 		
-		manualServerPort = new JTextField();
-		manualServerPort.setBounds(436, 338, 134, 28);
-		serverPanel.add(manualServerPort);
-		manualServerPort.setColumns(10);
+		serverPort = new JTextField();
+		serverPort.setBounds(436, 338, 134, 28);
+		serverPanel.add(serverPort);
+		serverPort.setColumns(10);
 		
 		JLabel lblIp = new JLabel("IP");
 		lblIp.setBounds(436, 241, 61, 16);
 		serverPanel.add(lblIp);
 		
-		JLabel lblName = new JLabel("Name");
+		JLabel lblName = new JLabel("Port");
 		lblName.setBounds(436, 319, 61, 16);
 		serverPanel.add(lblName);
 		
@@ -186,25 +178,17 @@ public class GUI extends JFrame{
 	
 	
 	//Methods that the controller uses to retrive values from the different textfields.
-	public String getIp() {
-		return ipField.getText();
+	public String getManualIp() {
+		return serverIpField.getText();
 	}
 
-	public String getManualServerName() {
-		return manualServerPort.getText();
-	}
-
-	public String getPlayerName() {
-		return playerNameField.getText();
-	}
-
-	public String getServerName() {
-		return serverNameField.getText();
+	public String getManualServerPort() {
+		return serverPort.getText();
 	}
 
 	
-	public String getServerPort() {
-		return serverPortField.getText();
+	public String getCreatePort() {
+		return createPortField.getText();
 	}
 	
 	public Object[][] getServerTable(){
@@ -231,6 +215,17 @@ public class GUI extends JFrame{
 		tabbedPane.addTab("Game", null, game, null);
 		tabbedPane.setSelectedIndex(2);
 		return game;
+	}
+	
+	public boolean isTableSelected(){
+		int selected = table.getSelectedRow();
+		if(selected == -1) return false;
+		return true;
+	}
+	
+	public void updateServerData(){
+		serverIpField.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+		serverPort.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
 	}
 	
 	public void removeGame(){

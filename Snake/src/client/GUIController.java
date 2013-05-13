@@ -27,16 +27,15 @@ public class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			String serverIP = gui.getIp();
-			String manualServerPort = gui.getServerPort();
-			if(serverIP.equals(null) && manualServerPort.equals(null)){
-				model.connectToServer(gui.getServer());
-			}else{
-				Object[] obj = new Object[2];
-				obj[0] = gui.getManualServerName();
-				obj[1] = gui.getPlayerName();
-				model.connectToServer(obj);
+			if(gui.isTableSelected()){
+				gui.updateServerData();
+
 			}
+			Object[] obj = new Object[2];
+			obj[0] = gui.getManualIp();
+			obj[1] = gui.getManualServerPort();	
+			model.connectToServer(obj);
+			
 		}
 		
 	}
@@ -54,7 +53,7 @@ public class GUIController {
 				model.closeGame();
 				gui.removeGame();
 			}
-			model.initiateNewGame(gui.getServerName(), gui.getServerPort());
+			model.initiateNewGame(gui.getCreatePort());
 			game = gui.startGame(model.getMonitor(), 60);
 			model.addGamePanel(game);
 //			model.startServer();
