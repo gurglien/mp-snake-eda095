@@ -25,7 +25,8 @@ public class ClientReceiver extends Thread{
 	}
 
 	public void run(){		
-		while(socket.isConnected()){
+		boolean isAlive = true;
+		while(!socket.isClosed()){
 			int code = mh.recieveCode();
 			switch(code){
 			case Protocol.COM_MOVE : recvCurrentOpponentMove();
@@ -36,6 +37,7 @@ public class ClientReceiver extends Thread{
 			break;
 			case Protocol.COM_STATE : recvGameState();
 			break;
+			
 			}
 		}
 	}
