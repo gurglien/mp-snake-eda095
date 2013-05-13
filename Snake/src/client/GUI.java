@@ -27,7 +27,7 @@ public class GUI extends JFrame{
 //TextFields
 
 	private JTextField ipField;
-	private JTextField manualServerName;
+	private JTextField manualServerPort;
 	private JTextField playerNameField;
 	private JTextField serverNameField;
 	private JTextField serverPortField;;
@@ -144,10 +144,10 @@ public class GUI extends JFrame{
 		serverPanel.add(ipField);
 		ipField.setColumns(10);
 		
-		manualServerName = new JTextField();
-		manualServerName.setBounds(436, 338, 134, 28);
-		serverPanel.add(manualServerName);
-		manualServerName.setColumns(10);
+		manualServerPort = new JTextField();
+		manualServerPort.setBounds(436, 338, 134, 28);
+		serverPanel.add(manualServerPort);
+		manualServerPort.setColumns(10);
 		
 		JLabel lblIp = new JLabel("IP");
 		lblIp.setBounds(436, 241, 61, 16);
@@ -191,7 +191,7 @@ public class GUI extends JFrame{
 	}
 
 	public String getManualServerName() {
-		return manualServerName.getText();
+		return manualServerPort.getText();
 	}
 
 	public String getPlayerName() {

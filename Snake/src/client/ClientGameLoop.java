@@ -65,8 +65,16 @@ public class ClientGameLoop extends Thread{
 				long diff = loopStart - System.currentTimeMillis();
 				if(diff > 0) sleep(diff);
 			}	
+			closeAll();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Closes all sockets streams etc for this thread
+	 */
+	private void closeAll(){
+		
 	}
 }

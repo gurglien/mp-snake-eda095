@@ -27,9 +27,9 @@ public class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			String manualServerName = gui.getManualServerName();
+			String serverIP = gui.getIp();
 			String manualServerPort = gui.getServerPort();
-			if(manualServerName.equals(null) && manualServerPort.equals(null)){
+			if(serverIP.equals(null) && manualServerPort.equals(null)){
 				model.connectToServer(gui.getServer());
 			}else{
 				Object[] obj = new Object[2];
