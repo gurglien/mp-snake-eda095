@@ -43,7 +43,7 @@ public class DServer extends Thread {
 					String s = new String(dp.getData(),0,dp.getLength());
 					InetAddress cAddr = dp.getAddress();
 					int cPort = dp.getPort();
-					//System.out.println("Received: " + s + " from " + cAddr.toString() + ":" + cPort);
+					System.out.println("Received: " + s + " from " + cAddr.toString() + ":" + cPort);
 					DatagramSocket socket = new DatagramSocket();
 					buf = (MESSAGE + gameServerPort).getBytes();
 					dp = new DatagramPacket(buf, buf.length, cAddr, cPort);

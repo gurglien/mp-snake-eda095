@@ -11,6 +11,7 @@ import client.ClientMonitor.GameState;
 import server.Server;
 import server.ServerMonitor;
 
+import autodetect.DServer;
 import autodetect.ServerFinder;
 
 public class Model {
@@ -20,6 +21,7 @@ public class Model {
 	private Server server;
 	private Socket socket;
 	private Client client;
+	private DServer detector;
 	/**
 	 * Retrives a matrix of the servers that are online currently.
 	 * @return 
@@ -60,6 +62,8 @@ public class Model {
 			socket = new Socket(host, port);
 			clientMonitor = new ClientMonitor();
 			client = new Client(clientMonitor, playfieldWidth, socket);
+			detector = new DServer(port, 10000);
+			detector.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,13 +73,20 @@ public class Model {
 		clientMonitor.setState(GameState.CLOSE);
 		serverMonitor.setClientState(1, GameState.CLOSE);
 		serverMonitor.setClientState(2, GameState.CLOSE);
+		detector.interrupt();
+		
 		try {
+			detector.join();
 			socket.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		client = null;
 		server = null;
+		detector = null;
 	}
 	
 	public void addGamePanel(GamePanel panel){
@@ -116,6 +127,9 @@ public class Model {
 			port = Integer.parseInt(((String)server[1]));
 		}
 		String host = (String)server[0];
+		if(host.charAt(0) == '/'){
+			host = host.substring(1);
+		}
 		try {
 			socket = new Socket(host, port);
 			clientMonitor = new ClientMonitor();
