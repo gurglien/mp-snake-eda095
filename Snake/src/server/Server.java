@@ -46,6 +46,7 @@ public class Server extends Thread{
 			ServerReceiver sr2 = new ServerReceiver(2, monitor, s);
 			sr2.start();		
 		} catch (IOException e) {
+			
 			e.printStackTrace();
 		}
 	}

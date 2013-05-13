@@ -236,8 +236,4 @@ public class GUI extends JFrame{
 		//TODO define selected server and return it.
 		return null;
 	}
-	public static void main(String[] args){
-		GUI gui = new GUI();
-		gui.setVisible(true);
-	}
 }
