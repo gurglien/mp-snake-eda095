@@ -55,15 +55,15 @@ public class ServerReceiver extends Thread{
 		int s = mh.recieveCode();
 		switch(s){
 		case Protocol.READY : monitor.setClientState(player, GameState.READY);
-		///// TEMP
-		try {
-			sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		monitor.setClientState(2, GameState.READY);
-		/////
+//		///// TEMP
+//		try {
+//			sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		monitor.setClientState(2, GameState.READY);
+//		/////
 		break;
 		}
 	}

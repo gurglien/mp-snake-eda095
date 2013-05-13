@@ -13,9 +13,10 @@ public class ServerMonitor {
 	private boolean[] shouldGrow;
 	private GameState gameState;
 	private GameState[] clientStates = {GameState.NOT_READY, GameState.NOT_READY};
-	private boolean movesChecked;
+	private boolean[] movesChecked = {false, false};
 	private boolean serverReady;
-	private boolean foodChanged = false;
+	private boolean[] foodChanged = {false, false};
+	private boolean[] growChanged = {false, false};
 	private Position food;
 	
 	public ServerMonitor(){
@@ -23,7 +24,6 @@ public class ServerMonitor {
 		currentMoves = new Move[2];
 		shouldGrow = new boolean[2];
 		gameState = GameState.NOT_READY;
-		movesChecked = false;
 		serverReady = false;
 		
 		nextMoves[0] = Move.RIGHT;
@@ -44,17 +44,18 @@ public class ServerMonitor {
 	}
 	
 	public synchronized void putCurrentMoves(Move[] moves) throws InterruptedException{
-		while(movesChecked)	wait();
-		movesChecked = true;
+		while(movesChecked[0] || movesChecked[1]) wait();
+		movesChecked[0] = true;
+		movesChecked[1] = true;
 		notifyAll();
 		currentMoves = moves.clone();
 	}
 	
-	public synchronized Move[] getCurrentMoves() throws InterruptedException{
-		while(!movesChecked) wait();
-		movesChecked = false;
+	public synchronized Move getCurrentMove(int playerId) throws InterruptedException{
+		while(!movesChecked[playerId-1]) wait();
+		movesChecked[playerId-1] = false;
 		notifyAll();
-		return currentMoves.clone();
+		return currentMoves[playerId-1];
 	}
 	
 	/** STATE METHODS */
@@ -91,30 +92,39 @@ public class ServerMonitor {
 //	}
 	
 	/** FOOD METHODS */
-	public synchronized boolean foodChanged(){
-		return foodChanged;
+	public synchronized boolean foodChanged(int playerId){
+		return foodChanged[playerId - 1];
 	}
 	
 	public synchronized void putFood(Position f){
 		food = f;
-		foodChanged = true;
+		foodChanged[0] = true;
+		foodChanged[1] = true;
 	}
 	
-	public synchronized Position getFood(){
-		foodChanged = false;
+	public synchronized Position getFood(int playerId){
+		foodChanged[playerId - 1] = false;
 		return food;
 	}
 	
-	public synchronized void setShouldGrow(int playerId){
-		shouldGrow[playerId - 1] = true;
+	/** GROW METHODS */
+	public synchronized boolean growChanged(int querierId){
+		return growChanged[querierId - 1];
 	}
 	
-	public synchronized boolean getShouldGrow(int playerId){
-		if(shouldGrow[playerId - 1]) {
-			shouldGrow[playerId - 1] = false;
-			return true;
-		} else {
-			return false;
+	public synchronized void setShouldGrow(boolean[] grow){
+		shouldGrow = grow.clone();
+		growChanged[0] = true;
+		growChanged[1] = true;
+	}
+	
+	public synchronized boolean[] getShouldGrow(int querierId){
+		growChanged[querierId - 1] = false;
+		boolean[] ret = shouldGrow.clone();
+		if(!growChanged[0] && !growChanged[1]){
+			shouldGrow[0] = false;
+			shouldGrow[1] = false;
 		}
+		return ret;
 	}
 }

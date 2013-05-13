@@ -92,11 +92,11 @@ public class Model {
 //	}
 	
 	public void startInitiatedGame(){
-		if(server.equals(null) && client.equals(null)){
-			//TODO game not yet initialised unsupported behaviuor.
-		}else{
+//		if(server.equals(null) && client.equals(null)){
+//			//TODO game not yet initialised unsupported behaviuor.
+//		}else{
 			client.start();
-		}
+//		}
 	}
 	
 
@@ -108,7 +108,22 @@ public class Model {
 	 * @param server
 	 */
 	public void connectToServer(Object[] server) {
-		//TODO Juri do some magics!
+		int playfieldWidth = 60;
+		int port = 0;
+		if(((String)server[1]).equals("")){
+			System.err.println("Error: You need to specify a port number");
+			System.exit(1);
+		}else{
+			port = Integer.parseInt(((String)server[1]));
+		}
+		String host = (String)server[0];
+		try {
+			socket = new Socket(host, port);
+			clientMonitor = new ClientMonitor();
+			client = new Client(clientMonitor, playfieldWidth, socket);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

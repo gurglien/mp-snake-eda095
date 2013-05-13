@@ -47,7 +47,7 @@ public class GamePanel extends JPanel{
 		g.setColor(Color.black);
 		g.fillRect(0, 0, width, width);
 
-		if(snake1 != null && snake2 != null){
+		if(snake1 != null && snake2 != null && food != null){
 			paintGame(g);
 		}
 		paintMessage(g);

@@ -27,6 +27,11 @@ public class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			if(gameOn){
+				model.closeGame();
+				gui.removeGame();
+			}
+			
 			if(gui.isTableSelected()){
 				gui.updateServerData();
 
@@ -35,6 +40,11 @@ public class GUIController {
 			obj[0] = gui.getManualIp();
 			obj[1] = gui.getManualServerPort();	
 			model.connectToServer(obj);
+			
+			game = gui.startGame(model.getMonitor(), 60);
+			model.addGamePanel(game);
+			model.startInitiatedGame();
+			gameOn = true;
 			
 		}
 		

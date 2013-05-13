@@ -93,10 +93,12 @@ public class ServerLoop extends Thread {
 		Position head1 = p1.getSnake().getFirst();
 		Position head2 = p2.getSnake().getFirst();
 		if(head1.equals(food)){
-			servMon.setShouldGrow(1);
+			boolean[] shouldGrow = {true, false};
+			servMon.setShouldGrow(shouldGrow);
 			food = null;
 		}else if(head2.equals(food)){
-			servMon.setShouldGrow(2);
+			boolean[] shouldGrow = {false, true};
+			servMon.setShouldGrow(shouldGrow);
 			food = null;
 		}
 	}

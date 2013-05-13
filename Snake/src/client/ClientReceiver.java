@@ -69,6 +69,7 @@ public class ClientReceiver extends Thread{
 		case Protocol.ID_PLAYER : monitor.setShouldGrow(player);
 		break;
 		case Protocol.ID_OPPONENT : monitor.setShouldGrow(opponent);
+		break;
 		}
 	}
 

@@ -26,12 +26,25 @@ public class Server extends Thread{
 			ServerLoop game = new ServerLoop(monitor, width);
 			game.start();	
 			
+			// Player 1
 			Socket s = serverSocket.accept();
-			ServerSender ss = new ServerSender(1, monitor, s);
-			ss.start();
+			System.out.println("Player 1 connected on " + s.getLocalPort());
+			ServerSender ss1 = new ServerSender(1, monitor, s);
+			ss1.start();
 			
-			ServerReceiver sr = new ServerReceiver(1, monitor, s);
-			sr.start();		
+			ServerReceiver sr1 = new ServerReceiver(1, monitor, s);
+			sr1.start();	
+			
+			// Player 2
+			serverSocket = new ServerSocket(port+5); //TEMP - Behövs för att kunna köra två klienter lokalt
+			s = null;
+			s = serverSocket.accept();
+			System.out.println("Player 2 connected on " + s.getLocalPort());
+			ServerSender ss2 = new ServerSender(2, monitor, s);
+			ss2.start();
+			
+			ServerReceiver sr2 = new ServerReceiver(2, monitor, s);
+			sr2.start();		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

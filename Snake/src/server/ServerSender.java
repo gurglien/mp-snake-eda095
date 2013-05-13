@@ -36,7 +36,7 @@ public class ServerSender extends Thread{
 				}
 				if(state == GameState.PLAY){
 					sendFoodPos();
-					sendCurrenOpponentMove();
+					sendCurrentOpponentMove();
 					sendShouldGrow();
 				}
 				prevState = state;
@@ -69,11 +69,11 @@ public class ServerSender extends Thread{
 	}
 
 	// Get both players' moves and send to client
-	private void sendCurrenOpponentMove(){
+	private void sendCurrentOpponentMove(){
 		try {
-			Move[] moves = monitor.getCurrentMoves();
+			Move move = monitor.getCurrentMove(opponent);
 			mh.sendCode(Protocol.COM_MOVE);
-			switch(moves[1]){ // Remember to change, must depend on player variable
+			switch(move){
 			case LEFT : mh.sendCode(Protocol.LEFT);
 			break;
 			case RIGHT : mh.sendCode(Protocol.RIGHT);
@@ -89,20 +89,23 @@ public class ServerSender extends Thread{
 	}
 
 	private void sendShouldGrow(){
-		if(monitor.getShouldGrow(player)){
-			mh.sendCode(Protocol.COM_SHOULD_GROW);
-			mh.sendCode(Protocol.ID_PLAYER);
-		}
-		if(monitor.getShouldGrow(opponent)){
-			mh.sendCode(Protocol.COM_SHOULD_GROW);
-			mh.sendCode(Protocol.ID_OPPONENT);
+		if(monitor.growChanged(player)){
+			boolean[] shouldGrow = monitor.getShouldGrow(player);
+			if(shouldGrow[player - 1]){
+				mh.sendCode(Protocol.COM_SHOULD_GROW);
+				mh.sendCode(Protocol.ID_PLAYER);
+			}
+			if(shouldGrow[opponent - 1]){
+				mh.sendCode(Protocol.COM_SHOULD_GROW);
+				mh.sendCode(Protocol.ID_OPPONENT);
+			}
 		}
 	}
 
 	private void sendFoodPos(){
-		if(monitor.foodChanged()){
+		if(monitor.foodChanged(player)){
 			mh.sendCode(Protocol.COM_FOOD);
-			mh.sendPosition(monitor.getFood());
+			mh.sendPosition(monitor.getFood(player));
 		}
 	}
 }
