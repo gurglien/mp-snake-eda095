@@ -46,8 +46,7 @@ public class Model {
 		int playfieldWidth = 60;
 		int port = 0;
 		if(serverPort.equals("")){
-			System.err.println("Error: You need to specify a port number");
-			System.exit(1);
+			port = 5000;
 		}else{
 			port = Integer.parseInt(serverPort);
 		}
