@@ -116,13 +116,15 @@ public class Model {
 	/**
 	 * Connect to an already online server.
 	 * @param server
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws NoPortException 
 	 */
-	public void connectToServer(Object[] server) {
+	public void connectToServer(Object[] server) throws UnknownHostException, IOException, NoPortException {
 		int playfieldWidth = 60;
 		int port = 0;
 		if(((String)server[1]).equals("")){
-			System.err.println("Error: You need to specify a port number");
-			System.exit(1);
+			throw new NoPortException();
 		}else{
 			port = Integer.parseInt(((String)server[1]));
 		}
@@ -130,13 +132,19 @@ public class Model {
 		if(host.charAt(0) == '/'){
 			host = host.substring(1);
 		}
-		try {
-			socket = new Socket(host, port);
-			clientMonitor = new ClientMonitor();
-			client = new Client(clientMonitor, playfieldWidth, socket);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+		socket = new Socket(host, port);
+		clientMonitor = new ClientMonitor();
+		client = new Client(clientMonitor, playfieldWidth, socket);
 
+	}
+	
+	
+	public class NoPortException extends Exception{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8813013410854236792L;
+		
+	}
 }

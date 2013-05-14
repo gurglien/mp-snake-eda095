@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -235,5 +237,19 @@ public class GUI extends JFrame{
 	public Object[] getServer(){
 		//TODO define selected server and return it.
 		return null;
+	}
+	
+	public void unknownHost(){
+		JOptionPane.showMessageDialog(this,
+			    "Unknown Host, please check your spelling.",
+			    "Inane warning",
+			    JOptionPane.WARNING_MESSAGE);
+	}
+	
+	public void unknownPort(){
+		JOptionPane.showMessageDialog(this,
+			    "The portnumber was not recognized.",
+			    "Inane warning",
+			    JOptionPane.WARNING_MESSAGE);
 	}
 }

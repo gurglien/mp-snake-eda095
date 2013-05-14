@@ -2,8 +2,12 @@ package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
+
+import client.Model.NoPortException;
 
 public class GUIController {
 	private GUI gui;
@@ -39,7 +43,18 @@ public class GUIController {
 			Object[] obj = new Object[2];
 			obj[0] = gui.getManualIp();
 			obj[1] = gui.getManualServerPort();	
-			model.connectToServer(obj);
+			try {
+				model.connectToServer(obj);
+			} catch (UnknownHostException e) {
+				gui.unknownHost();
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoPortException e) {
+				gui.unknownPort();
+				return;
+			}
 			
 			game = gui.startGame(model.getMonitor(), 60);
 			model.addGamePanel(game);
@@ -66,13 +81,11 @@ public class GUIController {
 			model.initiateNewGame(gui.getCreatePort());
 			game = gui.startGame(model.getMonitor(), 60);
 			model.addGamePanel(game);
-//			model.startServer();
+			//model.startServer();
 			//TODO server needs to tell when the game shall start
 			model.startInitiatedGame();
 			gameOn = true;
-			
 		}
-		
 	}
 	
 	/**
