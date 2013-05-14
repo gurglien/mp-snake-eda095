@@ -34,13 +34,13 @@ public class GUI extends JFrame{
 
 
 //Tables
-	
 	private JTable table;
+	
 //Panes
 	private JScrollPane scrollPane;
 	private CloseTabbedPane tabbedPane;
-//Buttons
 	
+//Buttons
 	private JButton btnConnect;
 	private JButton btnNewGame;
 	private JButton btnRefresh;
@@ -49,33 +49,8 @@ public class GUI extends JFrame{
 	private JPanel serverPanel;
 	private GamePanel game;
 	
-	
-	
-//TODO This data is temporary for display purposes, will be changed later.
-//	private Object[][] serverData = {
-//		    {"Kathy", "Smith",
-//		     30000, new Integer(5), new Boolean(false)},
-//		    {"John", "Doe",
-//		     10, new Integer(3), new Boolean(true)},
-//		    {"Sue", "Black",
-//		     2000, new Integer(2), new Boolean(false)},
-//		    {"Jane", "White",
-//		     4311, new Integer(20), new Boolean(true)},
-//		    {"Joe", "Brown",
-//		     13431, new Integer(10), new Boolean(false)}
-//		};
 
-//		String[] columnNames = {"Server Name",
-//                "Server IP",
-//                "Server Port",
-//                "# of Players",
-//                "Private"};
-
-	private Object[][] serverData = {
-			{"1.2.3.4", 5678},
-			{"111.222.33.44", 5555}
-	};
-	
+	private Object[][] serverData = { {"<refresh>", "<refresh>"} };
 	private String[] columnNames = {"Server IP", "Server port"};
 	
 	public GUI() {
