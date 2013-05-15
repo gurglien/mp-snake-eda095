@@ -25,7 +25,7 @@ public class ServerReceiver extends Thread{
 	}
 
 	public void run(){
-		while(socket.isConnected()){
+		while(!isInterrupted()){
 			int com = mh.recieveCode();
 			switch(com){
 			case Protocol.COM_MOVE : recvNextMove();

@@ -24,7 +24,7 @@ public class ClientMonitor {
 	
 	public synchronized void initialize(int playerId) throws IllegalArgumentException{
 		if(playerId == 1){
-			nextMove = Move.RIGHT;
+			nextMove = Move.RIGHT; // putNextMove?
 			player = 0;
 			opponent = 1;
 		}else if(playerId == 2){
@@ -39,27 +39,28 @@ public class ClientMonitor {
 	
 	/** MOVE METHODS 
 	 * @throws InterruptedException */
+	public synchronized boolean moveChanged(){
+		return moveChanged;
+	}
+	
 	// Used by InputHandler
 	public synchronized void putNextMove(Move move) throws InterruptedException{
 		nextMove = move;
 		moveChanged = true;
-		notifyAll();
 	}
 	
 	// Used by ClientSender
 	public synchronized Move getNextMove() throws InterruptedException{
-		while(!moveChanged) wait();
 		moveChanged = false;
-		currentMoves[player] = nextMove;
 		return nextMove;
 	}
 	
 	// Used by ClientReceiver
-	public synchronized void putCurrentOpponentMove(Move move) throws InterruptedException{
+	public synchronized void putCurrentMoves(Move[] moves) throws InterruptedException{
 		while(moveChecked) wait();
 		moveChecked = true;
 		notifyAll();
-		currentMoves[opponent] = move;
+		currentMoves = moves.clone();
 	}
 	
 	// Used by ClientGameLoop

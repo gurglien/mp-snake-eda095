@@ -28,18 +28,19 @@ public class ServerSender extends Thread{
 	}
 
 	public void run(){		
-		while(socket.isConnected()){
+		while(!isInterrupted()){
 			try {
 				GameState state = monitor.getClientState(player);
 				if(state != prevState){
+					prevState = state;
 					sendGameState(state);
+					System.out.println(player + " " + state);
 				}
 				if(state == GameState.PLAY){
 					sendFoodPos();
-					sendCurrentOpponentMove();
+					sendCurrentMoves();
 					sendShouldGrow();
 				}
-				prevState = state;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -69,11 +70,12 @@ public class ServerSender extends Thread{
 	}
 
 	// Get both players' moves and send to client
-	private void sendCurrentOpponentMove(){
+	private void sendCurrentMoves(){
 		try {
-			Move move = monitor.getCurrentMove(opponent);
+			Move[] moves = monitor.getCurrentMoves(player);
 			mh.sendCode(Protocol.COM_MOVE);
-			switch(move){
+			
+			switch(moves[0]){
 			case LEFT : mh.sendCode(Protocol.LEFT);
 			break;
 			case RIGHT : mh.sendCode(Protocol.RIGHT);
@@ -83,29 +85,39 @@ public class ServerSender extends Thread{
 			case DOWN : mh.sendCode(Protocol.DOWN);
 			break;
 			}
+
+			switch(moves[1]){
+			case LEFT : mh.sendCode(Protocol.LEFT);
+			break;
+			case RIGHT : mh.sendCode(Protocol.RIGHT);
+			break;
+			case UP : mh.sendCode(Protocol.UP);
+			break;
+			case DOWN : mh.sendCode(Protocol.DOWN);
+			break;
+			}
+
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void sendShouldGrow(){
-		if(monitor.growChanged(player)){
-			boolean[] shouldGrow = monitor.getShouldGrow(player);
-			if(shouldGrow[player - 1]){
-				mh.sendCode(Protocol.COM_SHOULD_GROW);
-				mh.sendCode(Protocol.ID_PLAYER);
-			}
-			if(shouldGrow[opponent - 1]){
-				mh.sendCode(Protocol.COM_SHOULD_GROW);
-				mh.sendCode(Protocol.ID_OPPONENT);
-			}
+		if(!monitor.growChanged(player)) return;
+		boolean[] shouldGrow = monitor.getShouldGrow(player);
+		if(shouldGrow[player - 1]){
+			mh.sendCode(Protocol.COM_SHOULD_GROW);
+			mh.sendCode(Protocol.ID_PLAYER);
+		}
+		if(shouldGrow[opponent - 1]){
+			mh.sendCode(Protocol.COM_SHOULD_GROW);
+			mh.sendCode(Protocol.ID_OPPONENT);
 		}
 	}
 
 	private void sendFoodPos(){
-		if(monitor.foodChanged(player)){
-			mh.sendCode(Protocol.COM_FOOD);
-			mh.sendPosition(monitor.getFood(player));
-		}
+		if(!monitor.foodChanged(player)) return;
+		mh.sendCode(Protocol.COM_FOOD);
+		mh.sendPosition(monitor.getFood(player));
 	}
 }

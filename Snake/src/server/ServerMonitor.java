@@ -11,9 +11,9 @@ public class ServerMonitor {
 	private Move[] nextMoves;
 	private Move[] currentMoves;
 	private boolean[] shouldGrow;
-	private GameState gameState;
 	private GameState[] clientStates = {GameState.NOT_READY, GameState.NOT_READY};
-	private boolean[] movesChecked = {false, false};
+	private boolean[] movesRetreived = {true, true};
+	private boolean movesChecked = false;
 	private boolean serverReady;
 	private boolean[] foodChanged = {false, false};
 	private boolean[] growChanged = {false, false};
@@ -23,7 +23,6 @@ public class ServerMonitor {
 		nextMoves = new Move[2];
 		currentMoves = new Move[2];
 		shouldGrow = new boolean[2];
-		gameState = GameState.NOT_READY;
 		serverReady = false;
 		
 		nextMoves[0] = Move.RIGHT;
@@ -44,18 +43,22 @@ public class ServerMonitor {
 	}
 	
 	public synchronized void putCurrentMoves(Move[] moves) throws InterruptedException{
-		while(movesChecked[0] || movesChecked[1]) wait();
-		movesChecked[0] = true;
-		movesChecked[1] = true;
+		while(movesChecked) wait();
+		movesChecked = true;
+		movesRetreived[0] = false;
+		movesRetreived[1] = false;
 		notifyAll();
 		currentMoves = moves.clone();
 	}
 	
-	public synchronized Move getCurrentMove(int playerId) throws InterruptedException{
-		while(!movesChecked[playerId-1]) wait();
-		movesChecked[playerId-1] = false;
+	public synchronized Move[] getCurrentMoves(int querierId) throws InterruptedException{
+		while(!movesChecked || movesRetreived[querierId-1]) wait();
+		movesRetreived[querierId-1] = true;
+		if(movesRetreived[0] && movesRetreived[1]){
+			movesChecked = false;
+		}
 		notifyAll();
-		return currentMoves[playerId-1];
+		return currentMoves.clone();
 	}
 	
 	/** STATE METHODS */
