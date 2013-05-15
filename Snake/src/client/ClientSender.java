@@ -29,6 +29,8 @@ public class ClientSender extends Thread{
 			}
 			if(state == GameState.PLAY){
 				sendNextMove();
+			}else if(state == GameState.CLOSE){
+				interrupt();
 			}
 		}
 	}

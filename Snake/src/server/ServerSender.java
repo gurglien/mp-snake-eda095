@@ -31,15 +31,25 @@ public class ServerSender extends Thread{
 		while(!isInterrupted()){
 			try {
 				GameState state = monitor.getClientState(player);
-				if(state != prevState){
+				if(state != prevState && (state == GameState.PLAY || state == GameState.READY ||
+						state == GameState.NOT_READY)){
 					prevState = state;
 					sendGameState(state);
-					System.out.println(player + " " + state);
 				}
 				if(state == GameState.PLAY){
 					sendFoodPos();
 					sendCurrentMoves();
 					sendShouldGrow();
+				}else if(state != prevState && (state == GameState.WIN || state == GameState.LOSE || 
+						state == GameState.DRAW || state == GameState.CLOSE)){
+					sendFoodPos();
+					if(!monitor.moveRetreived(player)){
+						sendCurrentMoves();
+					}
+					sendShouldGrow();
+					prevState = state;
+					sendGameState(state);
+					interrupt();
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -65,6 +75,9 @@ public class ServerSender extends Thread{
 		break;
 		case DRAW : mh.sendCode(Protocol.COM_STATE);
 		mh.sendCode(Protocol.DRAW);
+		break;
+		case CLOSE : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.CLOSE);
 		break;
 		}
 	}

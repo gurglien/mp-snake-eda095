@@ -71,7 +71,7 @@ public class Model {
 	
 	public void closeGame(){
 		clientMonitor.setState(GameState.CLOSE);
-		serverMonitor.setClientState(1, GameState.CLOSE);
+		serverMonitor.setClientState(1, GameState.CLOSE); // TODO Remember to change
 		serverMonitor.setClientState(2, GameState.CLOSE);
 		detector.interrupt();
 		

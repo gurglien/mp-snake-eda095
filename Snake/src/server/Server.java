@@ -28,7 +28,6 @@ public class Server extends Thread{
 			
 			// Player 1
 			Socket s = serverSocket.accept();
-			System.out.println("Player 1 connected on " + s.getLocalPort());
 			ServerSender ss1 = new ServerSender(1, monitor, s);
 			ss1.start();
 			
@@ -39,7 +38,6 @@ public class Server extends Thread{
 			serverSocket = new ServerSocket(port+5); //TEMP - Behövs för att kunna köra två klienter lokalt
 			s = null;
 			s = serverSocket.accept();
-			System.out.println("Player 2 connected on " + s.getLocalPort());
 			ServerSender ss2 = new ServerSender(2, monitor, s);
 			ss2.start();
 			

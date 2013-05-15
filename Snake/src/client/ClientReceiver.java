@@ -109,10 +109,16 @@ public class ClientReceiver extends Thread{
 		monitor.initialize(player);
 		break;
 		case Protocol.WIN : state = GameState.WIN;
+		interrupt();
 		break;
 		case Protocol.LOSE : state = GameState.LOSE;
+		interrupt();
 		break;
 		case Protocol.DRAW : state = GameState.DRAW;
+		interrupt();
+		break;
+		case Protocol.CLOSE : state = GameState.CLOSE;
+		interrupt();
 		break;
 		}
 		final GameState finalState = state;
