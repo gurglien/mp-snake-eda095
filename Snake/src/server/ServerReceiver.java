@@ -12,6 +12,7 @@ public class ServerReceiver extends Thread{
 	private int player;
 	private MessageHandler mh;
 	private ServerMonitor monitor;
+	private boolean closeSocket = false;
 	private Socket socket;
 
 	public ServerReceiver(int player, ServerMonitor monitor, Socket socket) throws IllegalArgumentException{
@@ -56,9 +57,26 @@ public class ServerReceiver extends Thread{
 		switch(s){
 		case Protocol.READY : monitor.setClientState(player, GameState.READY);
 		break;
+		case Protocol.WIN : closeSocket = true;
+		interrupt();
+		break;
+		case Protocol.LOSE : closeSocket = true;
+		interrupt();
+		break;
+		case Protocol.DRAW : closeSocket = true;
+		interrupt();
+		break;
 		case Protocol.CLOSE : monitor.setClientState(player, GameState.CLOSE);
 		interrupt();
 		break;
+		}
+		if(closeSocket){
+			try {
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

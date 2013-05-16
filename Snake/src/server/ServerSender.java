@@ -13,7 +13,6 @@ public class ServerSender extends Thread{
 	private int opponent;
 	private MessageHandler mh;
 	private ServerMonitor monitor;
-	private Socket socket;
 	private GameState prevState = GameState.NOT_READY;
 
 	public ServerSender(int player, ServerMonitor monitor, Socket socket) throws IllegalArgumentException{
@@ -22,7 +21,6 @@ public class ServerSender extends Thread{
 		}
 		this.player = player;
 		this.monitor = monitor;
-		this.socket = socket;
 		mh = new MessageHandler(socket);
 		opponent = (player == 1) ? 2 : 1;
 	}

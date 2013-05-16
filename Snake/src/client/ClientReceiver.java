@@ -5,6 +5,7 @@ import client.Player.Move;
 import common.MessageHandler;
 import common.Protocol;
 
+import java.io.IOException;
 import java.net.*;
 
 import javax.swing.SwingUtilities;
@@ -17,6 +18,7 @@ public class ClientReceiver extends Thread{
 	private int player;
 	private int opponent;
 	private GamePanel panel;
+	private boolean closeSocket = false;
 
 	public ClientReceiver(ClientMonitor monitor, Socket socket) throws IllegalArgumentException{
 		this.monitor = monitor;
@@ -118,6 +120,7 @@ public class ClientReceiver extends Thread{
 		interrupt();
 		break;
 		case Protocol.CLOSE : state = GameState.CLOSE;
+		closeSocket = true;
 		interrupt();
 		break;
 		}
@@ -128,10 +131,17 @@ public class ClientReceiver extends Thread{
 				panel.updateGameState(finalState);
 			}
 		});
+		if(closeSocket){
+			try {
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void setPanel(GamePanel panel){
 		this.panel = panel;
 	}
-
 }

@@ -52,7 +52,7 @@ public class Model {
 		}else{
 			port = Integer.parseInt(serverPort);
 		}
-		String host = "localhost"; // TODO Change hard coded "localhost", so it's possible to connect to other servers
+		String host = "localhost";
 		
 		serverMonitor = new ServerMonitor();
 		server = new Server(serverMonitor, playfieldWidth, port);
@@ -71,12 +71,15 @@ public class Model {
 	
 	public void closeGame(){
 		clientMonitor.setState(GameState.CLOSE);
-		serverMonitor.setClientState(1, GameState.CLOSE); // TODO Remember to change
-		serverMonitor.setClientState(2, GameState.CLOSE);
-		detector.interrupt();
+		
+		if(detector != null){
+			detector.interrupt();
+		}
 		
 		try {
-			detector.join();
+			if(detector != null){
+				detector.join();
+			}
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -93,20 +96,8 @@ public class Model {
 		client.setPanel(panel);
 	}
 	
-//	public void startServer(){
-//		if(server.equals(null)){
-//			
-//		}else{
-//					server.start();
-//		}
-//	}
-	
 	public void startInitiatedGame(){
-//		if(server.equals(null) && client.equals(null)){
-//			//TODO game not yet initialised unsupported behaviuor.
-//		}else{
-			client.start();
-//		}
+		client.start();
 	}
 	
 

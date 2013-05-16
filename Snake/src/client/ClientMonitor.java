@@ -1,7 +1,5 @@
 package client;
 
-import java.util.ArrayList;
-
 import client.Player.Move;
 
 
@@ -13,7 +11,6 @@ public class ClientMonitor {
 	private GameState gameState = GameState.NOT_READY;
 	private boolean moveChecked = false;
 	private boolean moveChanged = false;
-	private boolean serverReady = false;
 	private Position food;
 	private int player;
 	private int opponent;
