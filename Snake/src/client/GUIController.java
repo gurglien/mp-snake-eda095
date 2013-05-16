@@ -2,6 +2,8 @@ package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -21,12 +23,25 @@ public class GUIController {
 		this.gui.setConnectListener(new ConnectListener());
 		this.gui.setRefreshListener(new RefreshListener());
 		this.gui.setNewGameListener(new NewGameListener());
+		this.gui.setWindowListener(new CloseListener());
 	}
+	
+	private class CloseListener extends WindowAdapter{
+		@Override
+		public void windowClosing(WindowEvent e)
+	      {
+	          if(gameOn){
+	        	  model.closeGame();
+	          }
+	          System.exit(0);
+	      }
+	}
+	
 	/**
 	 * An ActionListerner Class that handles the actions of the connect button.
 	 * @author marcus
 	 *
-	 */
+	 */	
 	private class ConnectListener implements ActionListener{
 
 		@Override

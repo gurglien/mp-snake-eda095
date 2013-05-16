@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -55,7 +56,8 @@ public class GUI extends JFrame{
 	
 	public GUI() {
 		setTitle("MPSnake Pro");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 649, 666);
 		setResizable(false);
 		tabbedPane = new CloseTabbedPane();
@@ -152,6 +154,10 @@ public class GUI extends JFrame{
 	
 	public void setRefreshListener(ActionListener list){
 		btnRefresh.addActionListener(list);
+	}
+	
+	public void setWindowListener(WindowAdapter wa){
+		this.addWindowListener(wa);
 	}
 	
 	
