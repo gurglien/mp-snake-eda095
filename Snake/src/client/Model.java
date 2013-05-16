@@ -129,7 +129,7 @@ public class Model {
 			port = Integer.parseInt(((String)server[1]));
 		}
 		String host = (String)server[0];
-		if(host.charAt(0) == '/'){
+		while(host.charAt(0) == '/'){
 			host = host.substring(1);
 		}
 		socket = new Socket(host, port);
