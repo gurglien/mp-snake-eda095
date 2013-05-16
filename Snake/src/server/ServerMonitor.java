@@ -1,7 +1,5 @@
 package server;
 
-import java.util.ArrayList;
-
 import client.Position;
 import client.ClientMonitor.GameState;
 import client.Player.Move;
@@ -29,7 +27,6 @@ public class ServerMonitor {
 		nextMoves[1] = Move.LEFT;
 		shouldGrow[0] = false;
 		shouldGrow[1] = false;
-
 	}
 	
 	
@@ -72,6 +69,9 @@ public class ServerMonitor {
 			clientStates[0] = GameState.PLAY;
 			clientStates[1] = GameState.PLAY;
 			serverReady = true;
+		}else if(state == GameState.CLOSE){
+			int opponentId = (playerId == 1) ? 2 : 1;
+			clientStates[opponentId - 1] = GameState.OPPONENT_DISC;
 		}
 		notifyAll();
 	}

@@ -56,7 +56,7 @@ public class GUIController {
 				return;
 			}
 			
-			game = gui.startGame(model.getMonitor(), 60);
+			game = gui.startGame(model.getMonitor(), 59);
 			model.addGamePanel(game);
 			model.startInitiatedGame();
 			gameOn = true;
@@ -79,7 +79,7 @@ public class GUIController {
 				gui.removeGame();
 			}
 			model.initiateNewGame(gui.getCreatePort());
-			game = gui.startGame(model.getMonitor(), 60);
+			game = gui.startGame(model.getMonitor(), 59);
 			model.addGamePanel(game);
 			model.startInitiatedGame();
 			gameOn = true;

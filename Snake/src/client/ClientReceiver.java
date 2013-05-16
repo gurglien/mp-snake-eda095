@@ -123,6 +123,9 @@ public class ClientReceiver extends Thread{
 		closeSocket = true;
 		interrupt();
 		break;
+		case Protocol.OPPONENT_DISC : state = GameState.OPPONENT_DISC;
+		interrupt();
+		break;
 		}
 		final GameState finalState = state;
 		monitor.setState(finalState);

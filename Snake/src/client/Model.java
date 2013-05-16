@@ -45,7 +45,7 @@ public class Model {
 	 * @param serverPort
 	 */
 	public void initiateNewGame(String serverPort) {
-		int playfieldWidth = 60;
+		int playfieldWidth = 59;
 		int port = 0;
 		if(serverPort.equals("")){
 			port = 5000;
@@ -112,7 +112,7 @@ public class Model {
 	 * @throws NoPortException 
 	 */
 	public void connectToServer(Object[] server) throws UnknownHostException, IOException, NoPortException {
-		int playfieldWidth = 60;
+		int playfieldWidth = 59;
 		int port = 0;
 		if(((String)server[1]).equals("")){
 			throw new NoPortException();

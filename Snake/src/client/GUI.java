@@ -57,6 +57,7 @@ public class GUI extends JFrame{
 		setTitle("MPSnake Pro");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 649, 666);
+		setResizable(false);
 		tabbedPane = new CloseTabbedPane();
 		
 		
