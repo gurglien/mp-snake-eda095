@@ -39,8 +39,7 @@ public class ServerSender extends Thread{
 					sendCurrentMoves();
 					sendShouldGrow();
 				}else if(state != prevState && (state == GameState.WIN || state == GameState.LOSE || 
-						state == GameState.DRAW || state == GameState.CLOSE || 
-						state == GameState.OPPONENT_DISC)){
+						state == GameState.DRAW || state == GameState.CLOSE)){
 					sendFoodPos();
 					if(!monitor.moveRetreived(player)){
 						sendCurrentMoves();
@@ -77,9 +76,6 @@ public class ServerSender extends Thread{
 		break;
 		case CLOSE : mh.sendCode(Protocol.COM_STATE);
 		mh.sendCode(Protocol.CLOSE);
-		break;
-		case OPPONENT_DISC : mh.sendCode(Protocol.COM_STATE);
-		mh.sendCode(Protocol.OPPONENT_DISC);
 		break;
 		}
 	}

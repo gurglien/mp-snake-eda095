@@ -69,9 +69,6 @@ public class ServerMonitor {
 			clientStates[0] = GameState.PLAY;
 			clientStates[1] = GameState.PLAY;
 			serverReady = true;
-		}else if(state == GameState.CLOSE){
-			int opponentId = (playerId == 1) ? 2 : 1;
-			clientStates[opponentId - 1] = GameState.OPPONENT_DISC;
 		}
 		notifyAll();
 	}

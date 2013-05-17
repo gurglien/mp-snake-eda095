@@ -4,7 +4,7 @@ import client.Player.Move;
 
 
 public class ClientMonitor {
-	public static enum GameState{PLAY, WIN, LOSE, DRAW, READY, NOT_READY, OPPONENT_DISC, CLOSE};
+	public static enum GameState{PLAY, WIN, LOSE, DRAW, READY, NOT_READY, CLOSE};
 	private Move nextMove;
 	private Move[] currentMoves = new Move[2];
 	private boolean[] shouldGrow = {false, false};
@@ -31,7 +31,6 @@ public class ClientMonitor {
 		}else{
 			throw new IllegalArgumentException("Only player 1 or 2 allowed.");
 		}
-//		currentMoves[player] = nextMove;
 	}
 	
 	/** MOVE METHODS 

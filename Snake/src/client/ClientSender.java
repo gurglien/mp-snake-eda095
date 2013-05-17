@@ -51,10 +51,6 @@ public class ClientSender extends Thread{
 		mh.sendCode(Protocol.CLOSE);
 		interrupt();
 		break;
-		case OPPONENT_DISC : mh.sendCode(Protocol.COM_STATE);
-		mh.sendCode(Protocol.OPPONENT_DISC);
-		interrupt();
-		break;
 		}
 	}
 

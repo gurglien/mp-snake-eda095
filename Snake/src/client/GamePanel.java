@@ -96,8 +96,6 @@ public class GamePanel extends JPanel{
 		break;
 		case NOT_READY : text = "Press SPACE when you are ready.";
 		break;
-		case OPPONENT_DISC : text = "You won by default.";
-		break;
 		}
 		g.setColor(Color.gray);
 		g.drawString(text, width/4, width/2);
