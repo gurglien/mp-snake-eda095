@@ -13,11 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
-import closePane.ButtonTabComponent;
-import closePane.CloseTabbedPane;
+
 
 /**
  * Menu GUI
@@ -39,7 +36,7 @@ public class GUI extends JFrame{
 	
 //Panes
 	private JScrollPane scrollPane;
-	private CloseTabbedPane tabbedPane;
+	private JTabbedPane tabbedPane;
 	
 //Buttons
 	private JButton btnConnect;
@@ -60,7 +57,7 @@ public class GUI extends JFrame{
 //		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 649, 666);
 		setResizable(false);
-		tabbedPane = new CloseTabbedPane();
+		tabbedPane = new JTabbedPane();
 		
 		
 
@@ -139,8 +136,6 @@ public class GUI extends JFrame{
 		table.setFillsViewportHeight(true);
 		serverPanel.add(scrollPane);
 		
-		tabbedPane.setTabComponentAt(tabbedPane.indexOfTab("Settings"), new ButtonTabComponent(tabbedPane));
-		tabbedPane.setTabComponentAt(tabbedPane.indexOfTab("Servers"), new ButtonTabComponent(tabbedPane));
 	}
 	
 	// Methods that the controller uses to add actionlisteners to the GUI.
