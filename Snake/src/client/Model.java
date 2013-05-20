@@ -117,7 +117,12 @@ public class Model {
 		if(((String)server[1]).equals("")){
 			throw new NoPortException();
 		}else{
-			port = Integer.parseInt(((String)server[1]));
+			try{
+				port = Integer.parseInt(((String)server[1]));
+			}catch(NumberFormatException e){
+				throw new NoPortException();
+			}
+			
 		}
 		String host = (String)server[0];
 		while(host.charAt(0) == '/'){
