@@ -13,11 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
-import closePane.ButtonTabComponent;
-import closePane.CloseTabbedPane;
+
 
 /**
  * Menu GUI
