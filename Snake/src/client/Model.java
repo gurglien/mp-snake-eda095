@@ -49,7 +49,6 @@ public class Model {
 	 * @param serverPort
 	 */
 	public void initiateNewGame(String serverPort) {
-		System.out.println("initiateNewGame");
 		if(serverPort.equals("")){
 			port = 5000;
 		}else{
@@ -60,23 +59,19 @@ public class Model {
 		serverMonitor = new ServerMonitor();
 		server = new Server(serverMonitor, playfieldWidth, port, this);
 		server.start();
-		while(!serverReady) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+
+		// Wait for server to get ready
 		try {
-//			System.out.println(1);
-			
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
 			socket = new Socket(host, port);
-			System.out.println(2);
 			clientMonitor = new ClientMonitor();
-			System.out.println(3);
 			client = new Client(clientMonitor, playfieldWidth, socket, this);
-			System.out.println("new Client");
 			detector = new DServer(port+5, 10000);
 			detector.start();
 		} catch (Exception e) {
@@ -85,10 +80,10 @@ public class Model {
 		
 	}
 	
-	public void serverReady() {
-		serverReady = true;
-		notifyAll();
-	}
+//	public void serverReady() {
+//		serverReady = true;
+//		notifyAll();
+//	}
 	
 	public void closeGame(){
 		clientMonitor.setState(GameState.CLOSE);

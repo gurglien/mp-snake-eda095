@@ -69,9 +69,6 @@ public class ServerReceiver extends Thread{
 		case Protocol.CLOSE : monitor.setClientState(player, GameState.CLOSE);
 		interrupt();
 		break;
-		case Protocol.OPPONENT_DISC : closeSocket = true;
-		interrupt();
-		break;
 		}
 		if(closeSocket){
 			try {

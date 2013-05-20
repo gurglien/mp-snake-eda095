@@ -22,7 +22,6 @@ public class Server extends Thread{
 	public void run() {
 		try {
 			ServerSocket serverSocket1 = new ServerSocket(port);
-			model.serverReady();
 			ServerLoop game = new ServerLoop(monitor, width);
 			game.start();	
 			
