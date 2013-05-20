@@ -31,7 +31,7 @@ public class Server extends Thread{
 			sr1.start();	
 			
 			// Player 2
-			ServerSocket serverSocket2 = new ServerSocket(port+5); //TEMP - Behövs för att kunna köra två klienter lokalt
+			ServerSocket serverSocket2 = new ServerSocket(port+5); //TEMP - Behï¿½vs fï¿½r att kunna kï¿½ra tvï¿½ klienter lokalt
 			s = null;
 			s = serverSocket2.accept();
 			ServerSender ss2 = new ServerSender(2, monitor, s);
@@ -40,14 +40,8 @@ public class Server extends Thread{
 			ServerReceiver sr2 = new ServerReceiver(2, monitor, s);
 			sr2.start();
 			
-			try {
-				sr1.join();
-				serverSocket1.close();
-				serverSocket2.close();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			serverSocket1.close();
+			serverSocket2.close();
 			
 		} catch (IOException e) {
 			

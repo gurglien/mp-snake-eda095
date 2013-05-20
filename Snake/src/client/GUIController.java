@@ -23,19 +23,8 @@ public class GUIController {
 		this.gui.setConnectListener(new ConnectListener());
 		this.gui.setRefreshListener(new RefreshListener());
 		this.gui.setNewGameListener(new NewGameListener());
-		this.gui.setWindowListener(new CloseListener());
 	}
 	
-	private class CloseListener extends WindowAdapter{
-		@Override
-		public void windowClosing(WindowEvent e)
-	      {
-	          if(gameOn){
-	        	  model.closeGame();
-	          }
-	          System.exit(0);
-	      }
-	}
 	
 	/**
 	 * An ActionListerner Class that handles the actions of the connect button.
@@ -47,7 +36,7 @@ public class GUIController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if(gameOn){
-				model.closeGame();
+//				model.closeGame();
 				gui.removeGame();
 			}
 			
@@ -90,7 +79,7 @@ public class GUIController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(gameOn){
-				model.closeGame();
+//				model.closeGame();
 				gui.removeGame();
 			}
 			model.initiateNewGame(gui.getCreatePort());

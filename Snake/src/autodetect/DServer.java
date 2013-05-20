@@ -48,10 +48,12 @@ public class DServer extends Thread {
 					buf = (MESSAGE + gameServerPort).getBytes();
 					dp = new DatagramPacket(buf, buf.length, cAddr, cPort);
 					socket.send(dp);
+//					socket.close();
 				} catch (SocketTimeoutException e) {
 					//check interrupt and wait again
 				}
 			}
+//			ms.close();
 		} catch(IOException e) {
 			System.out.println("Exception:"+e);
 		}
