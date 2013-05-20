@@ -53,8 +53,8 @@ public class GUI extends JFrame{
 	
 	public GUI() {
 		setTitle("MPSnake Pro");
-//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 649, 666);
 		setResizable(false);
 		tabbedPane = new JTabbedPane();
@@ -149,12 +149,7 @@ public class GUI extends JFrame{
 	
 	public void setRefreshListener(ActionListener list){
 		btnRefresh.addActionListener(list);
-	}
-	
-	public void setWindowListener(WindowAdapter wa){
-		this.addWindowListener(wa);
-	}
-	
+	}	
 	
 	//Methods that the controller uses to retrive values from the different textfields.
 	public String getManualIp() {

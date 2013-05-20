@@ -61,8 +61,8 @@ public class Model {
 		try {
 			socket = new Socket(host, port);
 			clientMonitor = new ClientMonitor();
-			client = new Client(clientMonitor, playfieldWidth, socket);
-			detector = new DServer(port, 10000);
+			client = new Client(clientMonitor, playfieldWidth, socket, this);
+			detector = new DServer(port+5, 10000);
 			detector.start();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,10 +77,10 @@ public class Model {
 		}
 		
 		try {
+			socket.close();
 			if(detector != null){
 				detector.join();
 			}
-			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -130,7 +130,7 @@ public class Model {
 		}
 		socket = new Socket(host, port);
 		clientMonitor = new ClientMonitor();
-		client = new Client(clientMonitor, playfieldWidth, socket);
+		client = new Client(clientMonitor, playfieldWidth, socket, this);
 
 	}
 	
