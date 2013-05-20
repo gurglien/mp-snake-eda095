@@ -22,7 +22,8 @@ public class Model {
 	private Socket socket;
 	private Client client;
 	private DServer detector;
-
+	
+	volatile boolean serverReady;
 	int playfieldWidth = 59;
 	int port = 0;
 	/**
@@ -54,16 +55,19 @@ public class Model {
 		}else{
 			port = Integer.parseInt(serverPort);
 		}
+		String host = "localhost";
 		
 		serverMonitor = new ServerMonitor();
 		server = new Server(serverMonitor, playfieldWidth, port, this);
 		server.start();
-		
-	}
-	
-	public void serverReady() {
-		String host = "localhost";
-		
+		while(!serverReady) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		try {
 //			System.out.println(1);
 			
@@ -78,6 +82,12 @@ public class Model {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public void serverReady() {
+		serverReady = true;
+		notifyAll();
 	}
 	
 	public void closeGame(){
