@@ -22,10 +22,12 @@ public class Model {
 	private Socket socket;
 	private Client client;
 	private DServer detector;
+	private GUI gui;
 	
-	volatile boolean serverReady;
-	int playfieldWidth = 59;
-	int port = 0;
+	public Model(GUI gui) {
+		this.gui = gui;
+	}
+
 	/**
 	 * Retrives a matrix of the servers that are online currently.
 	 * @return 
@@ -49,6 +51,8 @@ public class Model {
 	 * @param serverPort
 	 */
 	public void initiateNewGame(String serverPort) {
+		int playfieldWidth = 59;
+		int port = 0;
 		if(serverPort.equals("")){
 			port = 5000;
 		}else{
@@ -57,7 +61,7 @@ public class Model {
 		String host = "localhost";
 		
 		serverMonitor = new ServerMonitor();
-		server = new Server(serverMonitor, playfieldWidth, port, this);
+		server = new Server(serverMonitor, playfieldWidth, port);
 		server.start();
 
 		// Wait for server to get ready
@@ -80,12 +84,8 @@ public class Model {
 		
 	}
 	
-//	public void serverReady() {
-//		serverReady = true;
-//		notifyAll();
-//	}
-	
 	public void closeGame(){
+		gui.enableNewGame();
 		clientMonitor.setState(GameState.CLOSE);
 		
 		if(detector != null){

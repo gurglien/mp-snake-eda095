@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,6 +23,10 @@ import javax.swing.JTable;
 public class GUI extends JFrame{
 
 
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 //TextFields
 
 	private JTextField serverIpField;
@@ -187,7 +190,14 @@ public class GUI extends JFrame{
 		game = new GamePanel(monitor, size);
 		tabbedPane.addTab("Game", null, game, null);
 		tabbedPane.setSelectedIndex(2);
+		btnNewGame.setEnabled(false);
+		btnConnect.setEnabled(false);
 		return game;
+	}
+	
+	public void enableNewGame() {
+		btnNewGame.setEnabled(true);
+		btnConnect.setEnabled(true);
 	}
 	
 	public boolean isTableSelected(){
