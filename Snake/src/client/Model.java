@@ -22,6 +22,9 @@ public class Model {
 	private Socket socket;
 	private Client client;
 	private DServer detector;
+
+	int playfieldWidth = 59;
+	int port = 0;
 	/**
 	 * Retrives a matrix of the servers that are online currently.
 	 * @return 
@@ -45,23 +48,31 @@ public class Model {
 	 * @param serverPort
 	 */
 	public void initiateNewGame(String serverPort) {
-		int playfieldWidth = 59;
-		int port = 0;
+		System.out.println("initiateNewGame");
 		if(serverPort.equals("")){
 			port = 5000;
 		}else{
 			port = Integer.parseInt(serverPort);
 		}
-		String host = "localhost";
 		
 		serverMonitor = new ServerMonitor();
-		server = new Server(serverMonitor, playfieldWidth, port);
+		server = new Server(serverMonitor, playfieldWidth, port, this);
 		server.start();
 		
+	}
+	
+	public void serverReady() {
+		String host = "localhost";
+		
 		try {
+//			System.out.println(1);
+			
 			socket = new Socket(host, port);
+			System.out.println(2);
 			clientMonitor = new ClientMonitor();
+			System.out.println(3);
 			client = new Client(clientMonitor, playfieldWidth, socket, this);
+			System.out.println("new Client");
 			detector = new DServer(port+5, 10000);
 			detector.start();
 		} catch (Exception e) {

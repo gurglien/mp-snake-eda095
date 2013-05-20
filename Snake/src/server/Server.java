@@ -4,21 +4,25 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import client.Model;
+
 public class Server extends Thread{
 	private int width;
 	private int port;
 	private ServerMonitor monitor;
+	private Model model;
 	
-	public Server(ServerMonitor monitor, int width, int port){
+	public Server(ServerMonitor monitor, int width, int port, Model model){
 		this.width = width;
 		this.port = port;
 		this.monitor = monitor;
+		this.model = model;
 	}
 	
 	public void run() {
 		try {
 			ServerSocket serverSocket1 = new ServerSocket(port);
-			
+			model.serverReady();
 			ServerLoop game = new ServerLoop(monitor, width);
 			game.start();	
 			
