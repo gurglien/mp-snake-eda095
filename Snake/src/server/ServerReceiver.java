@@ -12,6 +12,7 @@ public class ServerReceiver extends Thread{
 	private int player;
 	private MessageHandler mh;
 	private ServerMonitor monitor;
+	private boolean closeSocket = false;
 	private Socket socket;
 
 	public ServerReceiver(int player, ServerMonitor monitor, Socket socket) throws IllegalArgumentException{
@@ -25,7 +26,7 @@ public class ServerReceiver extends Thread{
 	}
 
 	public void run(){
-		while(socket.isConnected()){
+		while(!isInterrupted()){
 			int com = mh.recieveCode();
 			switch(com){
 			case Protocol.COM_MOVE : recvNextMove();
@@ -55,16 +56,30 @@ public class ServerReceiver extends Thread{
 		int s = mh.recieveCode();
 		switch(s){
 		case Protocol.READY : monitor.setClientState(player, GameState.READY);
-//		///// TEMP
-//		try {
-//			sleep(1000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		monitor.setClientState(2, GameState.READY);
-//		/////
 		break;
+		case Protocol.WIN : closeSocket = true;
+		interrupt();
+		break;
+		case Protocol.LOSE : closeSocket = true;
+		interrupt();
+		break;
+		case Protocol.DRAW : closeSocket = true;
+		interrupt();
+		break;
+		case Protocol.CLOSE : monitor.setClientState(player, GameState.CLOSE);
+		interrupt();
+		break;
+		case Protocol.OPPONENT_DISC : closeSocket = true;
+		interrupt();
+		break;
+		}
+		if(closeSocket){
+			try {
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

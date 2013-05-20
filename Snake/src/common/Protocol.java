@@ -23,5 +23,6 @@ public class Protocol {
 	DRAW = 43,
 	READY = 44,
 	NOT_READY = 45,
-	CLOSE = 46;
+	CLOSE = 46,
+	OPPONENT_DISC = 47;
 }

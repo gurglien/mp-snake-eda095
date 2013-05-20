@@ -8,20 +8,17 @@ import common.Protocol;
 import java.net.*;
 
 public class ClientSender extends Thread{
-	public static final int DEFAULT_PORT = 30000;
-	private Socket socket;
 	private ClientMonitor monitor;
 	private MessageHandler mh;
-	private GameState prevState;
+	private GameState prevState = GameState.NOT_READY;
 
 	public ClientSender(ClientMonitor monitor, Socket socket){
 		this.monitor = monitor;
-		this.socket = socket;
 		mh = new MessageHandler(socket);
 	}
 
 	public void run(){
-		while(socket.isConnected()){
+		while(!isInterrupted()){
 			GameState state = monitor.getState();
 			if(state != prevState){
 				prevState = state;
@@ -38,14 +35,28 @@ public class ClientSender extends Thread{
 		case READY : mh.sendCode(Protocol.COM_STATE);
 		mh.sendCode(Protocol.READY);
 		break;
+		case WIN : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.WIN);
+		interrupt();
+		break;
+		case LOSE : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.LOSE);
+		interrupt();
+		break;
+		case DRAW : mh.sendCode(Protocol.COM_STATE);
+		mh.sendCode(Protocol.DRAW);
+		interrupt();
+		break;
 		case CLOSE : mh.sendCode(Protocol.COM_STATE);
 		mh.sendCode(Protocol.CLOSE);
+		interrupt();
 		break;
 		}
 	}
 
 	// Send local player's next move to server
 	private void sendNextMove(){
+		if(!monitor.moveChanged()) return;
 		try {
 			Move nextMove = monitor.getNextMove();
 			mh.sendCode(Protocol.COM_MOVE);

@@ -1,6 +1,5 @@
 package server;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import client.*;
@@ -93,10 +92,12 @@ public class ServerLoop extends Thread {
 		Position head1 = p1.getSnake().getFirst();
 		Position head2 = p2.getSnake().getFirst();
 		if(head1.equals(food)){
+			p1.grow();
 			boolean[] shouldGrow = {true, false};
 			servMon.setShouldGrow(shouldGrow);
 			food = null;
 		}else if(head2.equals(food)){
+			p2.grow();
 			boolean[] shouldGrow = {false, true};
 			servMon.setShouldGrow(shouldGrow);
 			food = null;

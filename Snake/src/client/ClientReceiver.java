@@ -5,6 +5,7 @@ import client.Player.Move;
 import common.MessageHandler;
 import common.Protocol;
 
+import java.io.IOException;
 import java.net.*;
 
 import javax.swing.SwingUtilities;
@@ -17,6 +18,7 @@ public class ClientReceiver extends Thread{
 	private int player;
 	private int opponent;
 	private GamePanel panel;
+	private boolean closeSocket = false;
 
 	public ClientReceiver(ClientMonitor monitor, Socket socket) throws IllegalArgumentException{
 		this.monitor = monitor;
@@ -25,11 +27,10 @@ public class ClientReceiver extends Thread{
 	}
 
 	public void run(){		
-		boolean isAlive = true;
-		while(!socket.isClosed()){
+		while(!isInterrupted()){
 			int code = mh.recieveCode();
 			switch(code){
-			case Protocol.COM_MOVE : recvCurrentOpponentMove();
+			case Protocol.COM_MOVE : recvCurrentMoves();
 			break;
 			case Protocol.COM_SHOULD_GROW : recvShouldGrow();
 			break;
@@ -37,27 +38,39 @@ public class ClientReceiver extends Thread{
 			break;
 			case Protocol.COM_STATE : recvGameState();
 			break;
-			
+
 			}
 		}
 	}
 
 	// Receive both players current moves that should be updated locally
-	private void recvCurrentOpponentMove(){
-		Move move = null;
-		int m = mh.recieveCode();
-		switch(m){
-		case Protocol.LEFT : move = Move.LEFT;
+	private void recvCurrentMoves(){
+		Move[] moves = new Move[2];
+		int m1 = mh.recieveCode();
+		switch(m1){
+		case Protocol.LEFT : moves[0] = Move.LEFT;
 		break;
-		case Protocol.RIGHT : move = Move.RIGHT;
+		case Protocol.RIGHT : moves[0] = Move.RIGHT;
 		break;
-		case Protocol.UP : move = Move.UP;
+		case Protocol.UP : moves[0] = Move.UP;
 		break;
-		case Protocol.DOWN : move = Move.DOWN;
+		case Protocol.DOWN : moves[0] = Move.DOWN;
+		break;
+		}
+
+		int m2 = mh.recieveCode();
+		switch(m2){
+		case Protocol.LEFT : moves[1] = Move.LEFT;
+		break;
+		case Protocol.RIGHT : moves[1] = Move.RIGHT;
+		break;
+		case Protocol.UP : moves[1] = Move.UP;
+		break;
+		case Protocol.DOWN : moves[1] = Move.DOWN;
 		break;
 		}
 		try {
-			monitor.putCurrentOpponentMove(move);
+			monitor.putCurrentMoves(moves);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -98,10 +111,17 @@ public class ClientReceiver extends Thread{
 		monitor.initialize(player);
 		break;
 		case Protocol.WIN : state = GameState.WIN;
+		interrupt();
 		break;
 		case Protocol.LOSE : state = GameState.LOSE;
+		interrupt();
 		break;
 		case Protocol.DRAW : state = GameState.DRAW;
+		interrupt();
+		break;
+		case Protocol.CLOSE : state = GameState.CLOSE;
+		closeSocket = true;
+		interrupt();
 		break;
 		}
 		final GameState finalState = state;
@@ -111,10 +131,17 @@ public class ClientReceiver extends Thread{
 				panel.updateGameState(finalState);
 			}
 		});
+		if(closeSocket){
+			try {
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void setPanel(GamePanel panel){
 		this.panel = panel;
 	}
-
 }

@@ -95,6 +95,7 @@ public class GamePanel extends JPanel{
 		case READY : text = "Waiting for other player to become ready.";
 		break;
 		case NOT_READY : text = "Press SPACE when you are ready.";
+		break;
 		}
 		g.setColor(Color.gray);
 		g.drawString(text, width/4, width/2);
@@ -122,6 +123,7 @@ public class GamePanel extends JPanel{
 			case KeyEvent.VK_DOWN : m = Move.DOWN;
 			break;
 			case KeyEvent.VK_SPACE : 
+				if(currentState != GameState.NOT_READY) break;
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						monitor.setState(GameState.READY);
